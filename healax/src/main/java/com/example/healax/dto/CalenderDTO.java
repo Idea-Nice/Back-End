@@ -24,15 +24,17 @@ public class CalenderDTO {
 
     private Timestamp endday;
 
+    private Long userId;
+
     public static CalenderDTO toSaveCalenderDTO(CalenderEntity calenderEntity) {
 
         CalenderDTO calenderDTO = new CalenderDTO();
 
-        calenderDTO.setId(calenderEntity.getId());
         calenderDTO.setTitle(calenderEntity.getTitle());
         calenderDTO.setContent(calenderEntity.getContent());
         calenderDTO.setStartday(calenderEntity.getStartday());
-        calenderDTO.setStartday(calenderEntity.getStartday());
+        calenderDTO.setEndday(calenderEntity.getEndday());
+        calenderDTO.setUserId(calenderDTO.getUserId());
 
         return calenderDTO;
     }

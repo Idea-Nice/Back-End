@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -18,7 +19,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 30, unique = true)
     private String userId;
 
     @Column(nullable = false, length = 30)
@@ -27,12 +28,12 @@ public class UserEntity {
     @Column(nullable = false, length = 30)
     private String userName;
 
-    @Column(nullable = false, length = 30)
+    @ColumnDefault("0")
     private String level;
 
-    @Column(nullable = false, length = 100)
+    @ColumnDefault("0")
     private String exp;
 
-    @Column(nullable = false)
+    @ColumnDefault("1")
     private boolean status;
 }

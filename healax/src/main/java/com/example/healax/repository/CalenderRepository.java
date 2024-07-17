@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface CalenderRepository extends JpaRepository<CalenderEntity, Long> {
-    List<CalenderEntity> findAllByUserId(Long user_Id);
+    List<CalenderEntity> findAll(Long userId);
 }

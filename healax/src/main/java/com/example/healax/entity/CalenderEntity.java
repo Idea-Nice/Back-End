@@ -1,5 +1,6 @@
 package com.example.healax.entity;
 
+import com.example.healax.dto.CalenderDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +34,6 @@ public class CalenderEntity {
     private Timestamp endday;
 
     @ManyToOne
-    @JoinColumn(name = "user_Id")
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 }

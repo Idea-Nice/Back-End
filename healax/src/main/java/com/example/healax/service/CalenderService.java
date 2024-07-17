@@ -2,7 +2,9 @@ package com.example.healax.service;
 
 import com.example.healax.dto.CalenderDTO;
 import com.example.healax.entity.CalenderEntity;
+import com.example.healax.entity.UserEntity;
 import com.example.healax.repository.CalenderRepository;
+import com.example.healax.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,20 +18,15 @@ public class CalenderService {
 
     private final CalenderRepository calenderRepository;
 
-    //사용자의 캘린더 목록 반환
-    public List<CalenderDTO> getCalenderAllById(Long user_Id) {
+    public List<CalenderDTO> findAll(Long userId) {
 
-        List<CalenderEntity> calenderEntities = calenderRepository.findAllByUserId(user_Id);
-
-        // CalenderEntity 리스트를 CalenderDTO 리스트로 변환합니다.
+        List<CalenderEntity> calenderEntityList = calenderRepository.findAll(userId);
         List<CalenderDTO> calenderDTOList = new ArrayList<>();
 
-        for (CalenderEntity calenderEntity : calenderEntities) {
-            CalenderDTO calenderDTO = CalenderDTO.toSaveCalenderDTO(calenderEntity);
-            calenderDTOList.add(calenderDTO);
+        for (CalenderEntity calenderEntity : calenderEntityList) {
+            calenderDTOList.add(CalenderDTO.toSaveCalenderDTO(calenderEntity));
         }
 
-        // CalenderDTO 리스트를 반환합니다.
         return calenderDTOList;
     }
 }
