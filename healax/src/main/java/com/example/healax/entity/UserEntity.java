@@ -1,5 +1,6 @@
 package com.example.healax.entity;
 
+import com.example.healax.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,11 +30,26 @@ public class UserEntity {
     private String userName;
 
     @ColumnDefault("0")
-    private String level;
+    @Column(nullable = false)
+    private String level = "0";
 
     @ColumnDefault("0")
-    private String exp;
+    @Column(nullable = false)
+    private String exp = "0";
 
     @ColumnDefault("1")
+    @Column(nullable = false)
     private boolean status;
+
+    public static UserEntity toSaveUserEntity(UserDTO userDTO) {
+
+        UserEntity userEntity = new UserEntity();
+
+        userEntity.userId = userDTO.getUserId();
+        userEntity.userPw = userDTO.getUserPw();
+        userEntity.userName = userDTO.getUserName();
+
+        return userEntity;
+    }
+
 }

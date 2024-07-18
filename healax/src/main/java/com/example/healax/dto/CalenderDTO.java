@@ -26,16 +26,4 @@ public class CalenderDTO {
 
     private Long userId;
 
-    public static CalenderDTO toSaveCalenderDTO(CalenderEntity calenderEntity) {
-
-        CalenderDTO calenderDTO = new CalenderDTO();
-
-        calenderDTO.setTitle(calenderEntity.getTitle());
-        calenderDTO.setContent(calenderEntity.getContent());
-        calenderDTO.setStartday(calenderEntity.getStartday());
-        calenderDTO.setEndday(calenderEntity.getEndday());
-        calenderDTO.setUserId(calenderDTO.getUserId());
-
-        return calenderDTO;
-    }
 }
