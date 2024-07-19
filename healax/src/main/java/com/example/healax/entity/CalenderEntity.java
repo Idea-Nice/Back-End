@@ -1,6 +1,5 @@
 package com.example.healax.entity;
 
-import com.example.healax.dto.CalenderDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,13 +26,14 @@ public class CalenderEntity {
     @Column(nullable = false, length = 30)
     private String content;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private Timestamp startday;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private Timestamp endday;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
+
 }

@@ -1,6 +1,5 @@
 package com.example.healax.dto;
 
-import com.example.healax.entity.CalenderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +11,7 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CalenderDTO {
-
-    private Long id;
+public class SaveCalenderDTO {
 
     private String title;
 
@@ -23,7 +20,5 @@ public class CalenderDTO {
     private Timestamp startday;
 
     private Timestamp endday;
-
-    private Long userId;
 
 }
