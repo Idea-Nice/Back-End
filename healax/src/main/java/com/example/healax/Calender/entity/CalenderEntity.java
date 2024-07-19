@@ -1,5 +1,6 @@
-package com.example.healax.entity;
+package com.example.healax.Calender.entity;
 
+import com.example.healax.User.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,6 +35,6 @@ public class CalenderEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    private User user;
 
 }

@@ -1,11 +1,9 @@
-package com.example.healax.controller;
+package com.example.healax.User.controller;
 
+import com.example.healax.User.dto.StatusDTO;
+import com.example.healax.User.service.UserStatusService;
 import com.example.healax.config.CommonResponse;
-import com.example.healax.config.LevelResponse;
 import com.example.healax.config.StatusResponse;
-import com.example.healax.dto.StatusDTO;
-import com.example.healax.service.UserLevelStatusService;
-import com.example.healax.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,29 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
-public class UserLevelStatusController {
+public class UserStatusController {
 
-    private final UserLevelStatusService userLevelStatusService;
-
-    //회원 레벨 가져오기
-    @GetMapping("/level-get/{user_id}")
-    public ResponseEntity<LevelResponse> userLevel(@PathVariable String user_id) {
-        String level = userLevelStatusService.getLevel(user_id);
-
-        LevelResponse res = new LevelResponse(
-                200,
-                HttpStatus.OK,
-                level,
-                " 레벨 가져오기 성공",
-                null
-        );
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
+    private final UserStatusService userStatusService;
 
     //회원 상태 가져오기
     @GetMapping("/status-get/{user_id}")
-    public ResponseEntity<StatusResponse> userStatus(@PathVariable String user_id) {
-        String status = userLevelStatusService.getStatus(user_id);
+    public ResponseEntity<StatusResponse> userStatus(@PathVariable Long user_id) {
+        String status = userStatusService.getStatus(user_id);
 
         StatusResponse res = new StatusResponse(
                 200,
@@ -55,7 +38,7 @@ public class UserLevelStatusController {
     @PostMapping("/status")
     public ResponseEntity<CommonResponse> userSetStatus(@RequestBody StatusDTO statusDTO) {
 
-        userLevelStatusService.save(statusDTO);
+        userStatusService.save(statusDTO);
 
         CommonResponse res = new CommonResponse(
                 200,

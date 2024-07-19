@@ -1,6 +1,6 @@
-package com.example.healax.entity;
+package com.example.healax.User.entity;
 
-import com.example.healax.dto.UserDTO;
+import com.example.healax.User.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user")
-public class UserEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +41,9 @@ public class UserEntity {
     @Column(nullable = false)
     private boolean status;
 
-    public static UserEntity toSaveUserEntity(UserDTO userDTO) {
+    public static User toSaveUserEntity(UserDTO userDTO) {
 
-        UserEntity userEntity = new UserEntity();
+        User userEntity = new User();
 
         userEntity.userId = userDTO.getUserId();
         userEntity.userPw = userDTO.getUserPw();

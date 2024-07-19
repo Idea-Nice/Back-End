@@ -1,4 +1,4 @@
-package com.example.healax.dto;
+package com.example.healax.Calender.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

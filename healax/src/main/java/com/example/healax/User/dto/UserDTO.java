@@ -1,6 +1,6 @@
-package com.example.healax.dto;
+package com.example.healax.User.dto;
 
-import com.example.healax.entity.UserEntity;
+import com.example.healax.User.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class UserDTO {
 
     private boolean status;
 
-    public static UserDTO toSaveUserEntityDTO(UserEntity userEntity) {
+    public static UserDTO toSaveUserEntityDTO(User userEntity) {
         UserDTO userDTO = new UserDTO();
 
         userDTO.setUserId(userEntity.getUserId());

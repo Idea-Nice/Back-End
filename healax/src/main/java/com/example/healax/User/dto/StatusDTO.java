@@ -1,4 +1,4 @@
-package com.example.healax.dto;
+package com.example.healax.User.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StatusDTO {
 
-    private String userId;
+
+    private Long userId;
     private boolean status;
 }

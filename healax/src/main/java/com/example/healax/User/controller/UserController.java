@@ -1,8 +1,8 @@
-package com.example.healax.controller;
+package com.example.healax.User.controller;
 
+import com.example.healax.User.service.UserService;
 import com.example.healax.config.CommonResponse;
-import com.example.healax.dto.UserDTO;
-import com.example.healax.service.UserService;
+import com.example.healax.User.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,16 +50,16 @@ public class UserController {
         }
     }
 
-    //회원정보 수정 *
+    //회원정보 수정
     @PostMapping("/user-modify/{user_id}")
-    public ResponseEntity<String> userModify(@PathVariable String user_id, @RequestParam String userPw, @RequestParam String userName) {
+    public ResponseEntity<String> userModify(@PathVariable Long user_id, @RequestParam String userPw, @RequestParam String userName) {
         userService.userUpdate(user_id, userPw, userName);
         return ResponseEntity.status(HttpStatus.OK).body("회원정보가 수정되었습니다.");
     }
 
     //회원 탈퇴
     @DeleteMapping("/user-delete/{user_id}")
-    public String userDelete(@PathVariable String user_id) {
+    public String userDelete(@PathVariable Long user_id) {
         userService.delete(user_id);
         return "redirect:/login";
     }
