@@ -8,7 +8,13 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
+<<<<<<< HEAD
 	sourceCompatibility = '17'
+=======
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+>>>>>>> 민영
 }
 
 configurations {
