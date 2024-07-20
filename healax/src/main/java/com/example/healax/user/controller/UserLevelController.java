@@ -1,6 +1,6 @@
-package com.example.healax.User.controller;
+package com.example.healax.user.controller;
 
-import com.example.healax.User.service.UserLevelService;
+import com.example.healax.user.service.UserLevelService;
 import com.example.healax.config.LevelResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

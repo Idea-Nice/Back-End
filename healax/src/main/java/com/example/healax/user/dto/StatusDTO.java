@@ -1,4 +1,4 @@
-package com.example.healax.User.dto;
+package com.example.healax.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

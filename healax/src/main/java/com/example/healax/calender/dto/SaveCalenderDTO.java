@@ -1,4 +1,4 @@
-package com.example.healax.Calender.dto;
+package com.example.healax.calender.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,8 +18,7 @@ public class SaveCalenderDTO {
 
     private String content;
 
-    private Timestamp startday;
+    private LocalDateTime startday;
 
-    private Timestamp endday;
-
+    private LocalDateTime endday;
 }

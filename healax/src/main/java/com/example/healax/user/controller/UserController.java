@@ -1,8 +1,8 @@
-package com.example.healax.User.controller;
+package com.example.healax.user.controller;
 
-import com.example.healax.User.service.UserService;
+import com.example.healax.user.service.UserService;
 import com.example.healax.config.CommonResponse;
-import com.example.healax.User.dto.UserDTO;
+import com.example.healax.user.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
