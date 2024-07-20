@@ -1,6 +1,6 @@
-package com.example.healax.User.entity;
+package com.example.healax.user.entity;
 
-import com.example.healax.User.dto.UserDTO;
+import com.example.healax.user.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

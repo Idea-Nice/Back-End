@@ -1,6 +1,6 @@
-package com.example.healax.User.dto;
+package com.example.healax.user.dto;
 
-import com.example.healax.User.entity.User;
+import com.example.healax.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

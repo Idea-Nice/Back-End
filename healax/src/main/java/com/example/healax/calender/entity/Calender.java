@@ -1,13 +1,14 @@
-package com.example.healax.Calender.entity;
+package com.example.healax.calender.entity;
 
-import com.example.healax.User.entity.User;
+import com.example.healax.calender.dto.SaveCalenderDTO;
+import com.example.healax.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,7 +16,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "calender")
-public class CalenderEntity {
+public class Calender {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +29,10 @@ public class CalenderEntity {
     private String content;
 
     @Column(nullable = false)
-    private Timestamp startday;
+    private LocalDateTime startday;
 
     @Column(nullable = false)
-    private Timestamp endday;
+    private LocalDateTime endday;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

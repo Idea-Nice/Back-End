@@ -1,8 +1,8 @@
-package com.example.healax.User.service;
+package com.example.healax.user.service;
 
-import com.example.healax.User.dto.UserDTO;
-import com.example.healax.User.entity.User;
-import com.example.healax.User.repository.UserRepository;
+import com.example.healax.user.dto.UserDTO;
+import com.example.healax.user.entity.User;
+import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Calendar</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
+<h1>User Calendar for User ID: <span th:text="${userId}"></span></h1>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="calendar : ${calenderDTOList}">
+        <td th:text="${calendar.title}">Title</td>
+        <td th:text="${calendar.content}">Description</td>
+        <td th:text="${#temporals.format(calendar.startday, 'yyyy-MM-dd HH:mm')}">Start Date</td>
+        <td th:text="${#temporals.format(calendar.endday, 'yyyy-MM-dd HH:mm')}">End Date</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

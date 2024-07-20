@@ -1,7 +1,7 @@
-package com.example.healax.User.controller;
+package com.example.healax.user.controller;
 
-import com.example.healax.User.dto.StatusDTO;
-import com.example.healax.User.service.UserStatusService;
+import com.example.healax.user.dto.StatusDTO;
+import com.example.healax.user.service.UserStatusService;
 import com.example.healax.config.CommonResponse;
 import com.example.healax.config.StatusResponse;
 import lombok.RequiredArgsConstructor;

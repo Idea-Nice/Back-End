@@ -1,6 +1,6 @@
-package com.example.healax.User.repository;
+package com.example.healax.user.repository;
 
-import com.example.healax.User.entity.User;
+import com.example.healax.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
