@@ -1,9 +1,12 @@
 package com.example.healax.background.entity;
 
+import com.example.healax.User.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,4 +22,7 @@ public class Background {
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] image;
+
+    @ManyToMany(mappedBy = "backgrounds")
+    private List<User> users;
 }

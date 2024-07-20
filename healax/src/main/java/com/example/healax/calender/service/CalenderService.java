@@ -1,7 +1,5 @@
-package com.example.healax.Calender.service;
+package com.example.healax.calender.service;
 
-
-import com.example.healax.Calender.repository.CalenderRepository;
 import com.example.healax.User.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class CalenderService {
 
     private final UserRepository userRepository;
-    private final CalenderRepository calenderRepository;
+//    private final com.example.healax.Calender.repository.CalenderRepository calenderRepository;
 
 //    // 캘린더 저장하기
 //    public void save(Long user_Id, SaveCalenderDTO saveCalenderDTO) {

@@ -10,5 +10,10 @@
         <module name="com.example.healax.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="com.example.healax.main" target="17" />
+      <module name="healax" target="17" />
+      <module name="healax.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

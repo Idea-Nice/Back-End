@@ -1,6 +1,5 @@
 package com.example.healax.calender.dto;
 
-import com.example.healax.calender.entity.CalenderEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,7 @@ public class CalenderDTO {
 
     private Timestamp endday;
 
-    public static CalenderDTO toSaveCalenderDTO(CalenderEntity calenderEntity) {
+    public static CalenderDTO toSaveCalenderDTO(com.example.healax.Calender.entity.CalenderEntity calenderEntity) {
 
         CalenderDTO calenderDTO = new CalenderDTO();
 

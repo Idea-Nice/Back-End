@@ -1,17 +1,18 @@
 package com.example.healax.background.controller;
 
+import com.example.healax.background.dto.UserBackgroundDTO;
 import com.example.healax.background.entity.Background;
 import com.example.healax.background.repository.BackgroundRepository;
 import com.example.healax.background.service.BackgroundService;
 import com.example.healax.config.CommonResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,5 +36,41 @@ public class BackgroundController {
         }
 
         return modelAndView;
+    }
+
+    @GetMapping("/background-get")
+    public ResponseEntity<CommonResponse> getBackground(){
+        List backgroundAll = backgroundService.findAll();
+        CommonResponse res = new CommonResponse(
+                200,
+                HttpStatus.OK,
+                "전체 배경화면 가져오기 성공",
+                backgroundAll
+        );
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }
+
+    @GetMapping("/user/background/{user_id}")
+    public ResponseEntity<CommonResponse> getBackgroundIdsByUserId(@PathVariable String userId) {
+        List findBackgroundIdsByUserId = backgroundService.findBackgroundIdsByUserId(userId);
+        CommonResponse res = new CommonResponse(
+                200,
+                HttpStatus.OK,
+                "회원 배경 가져오기 성공",
+                findBackgroundIdsByUserId
+        );
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }
+
+    @PostMapping("/background-post")
+    public ResponseEntity<CommonResponse> addBackgroundToUser(@RequestBody UserBackgroundDTO userBackgroundDTO) {
+        backgroundService.addBackgroundToUser(userBackgroundDTO);
+        CommonResponse res = new CommonResponse(
+                200,
+                HttpStatus.OK,
+                "회원 배경 권한 부여 성공",
+                null
+        );
+        return new ResponseEntity<>(res, res.getHttpStatus());
     }
 }
