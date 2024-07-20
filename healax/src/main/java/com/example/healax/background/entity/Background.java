@@ -1,6 +1,6 @@
 package com.example.healax.background.entity;
 
-import com.example.healax.User.entity.User;
+import com.example.healax.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

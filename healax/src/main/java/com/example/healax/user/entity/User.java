@@ -1,5 +1,6 @@
 package com.example.healax.user.entity;
 
+import com.example.healax.background.entity.Background;
 import com.example.healax.user.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,5 +54,14 @@ public class User {
 
         return userEntity;
     }
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_background",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "background_id")
+    )
+    private List<Background> backgrounds;
+
 
 }

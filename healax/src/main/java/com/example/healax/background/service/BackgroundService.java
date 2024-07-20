@@ -1,11 +1,10 @@
 package com.example.healax.background.service;
 
-import com.example.healax.User.entity.User;
-import com.example.healax.User.repository.UserRepository;
+import com.example.healax.user.entity.User;
+import com.example.healax.user.repository.UserRepository;
 import com.example.healax.background.dto.BackgroundDTO;
 import com.example.healax.background.dto.UserBackgroundDTO;
 import com.example.healax.background.entity.Background;
-//import com.example.healax.background.repository.BackgroundRepository;
 import com.example.healax.background.repository.BackgroundRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
