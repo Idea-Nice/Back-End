@@ -17,6 +17,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="com.example.healax.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:3.3.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-websocket:3.3.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.json:json:20090211" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-thymeleaf:3.3.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:3.3.1" level="project" />
     <orderEntry type="library" name="Gradle: org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE" level="project" />
@@ -28,6 +30,8 @@
     <orderEntry type="library" name="Gradle: org.hibernate.orm:hibernate-core:6.5.2.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.data:spring-data-jpa:3.3.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-aspects:6.1.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-messaging:6.1.10" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework:spring-websocket:6.1.10" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter:3.3.1" level="project" />
     <orderEntry type="library" name="Gradle: org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-json:3.3.1" level="project" />
