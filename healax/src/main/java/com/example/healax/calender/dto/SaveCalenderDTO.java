@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,7 +17,8 @@ public class SaveCalenderDTO {
 
     private String content;
 
-    private LocalDateTime startday;
+    private Timestamp startday;
 
-    private LocalDateTime endday;
+    private Timestamp endday;
+
 }

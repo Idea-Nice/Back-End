@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -13,11 +13,26 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CalenderDTO {
 
+    private Long id;
+
     private String title;
 
     private String content;
 
-    private LocalDateTime startday;
+    private Timestamp startday;
 
-    private LocalDateTime endday;
+    private Timestamp endday;
+
+    public static CalenderDTO toSaveCalenderDTO(com.example.healax.Calender.entity.CalenderEntity calenderEntity) {
+
+        CalenderDTO calenderDTO = new CalenderDTO();
+
+        calenderDTO.setId(calenderEntity.getId());
+        calenderDTO.setTitle(calenderEntity.getTitle());
+        calenderDTO.setContent(calenderEntity.getContent());
+        calenderDTO.setStartday(calenderEntity.getStartday());
+        calenderDTO.setStartday(calenderEntity.getStartday());
+
+        return calenderDTO;
+    }
 }

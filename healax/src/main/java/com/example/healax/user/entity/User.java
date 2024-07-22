@@ -1,6 +1,7 @@
 package com.example.healax.user.entity;
 
 import com.example.healax.background.entity.Background;
+import com.example.healax.character.entity.Character;
 import com.example.healax.user.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -63,5 +64,11 @@ public class User {
     )
     private List<Background> backgrounds;
 
-
+    @ManyToMany
+    @JoinTable(
+            name = "user_character",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "character_id")
+    )
+    private List<Character> characters;
 }
