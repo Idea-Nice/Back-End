@@ -1,6 +1,6 @@
 package com.example.healax.calender.entity;
 
-import com.example.healax.User.entity.User;
+import com.example.healax.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

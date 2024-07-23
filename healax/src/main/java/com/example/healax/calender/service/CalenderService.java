@@ -1,6 +1,6 @@
 package com.example.healax.calender.service;
 
-import com.example.healax.User.repository.UserRepository;
+import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

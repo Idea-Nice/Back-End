@@ -23,7 +23,7 @@ public class CalenderDTO {
 
     private Timestamp endday;
 
-    public static CalenderDTO toSaveCalenderDTO(com.example.healax.Calender.entity.CalenderEntity calenderEntity) {
+    public static CalenderDTO toSaveCalenderDTO(com.example.healax.calender.entity.CalenderEntity calenderEntity) {
 
         CalenderDTO calenderDTO = new CalenderDTO();
 
