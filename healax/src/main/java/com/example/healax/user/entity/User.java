@@ -1,6 +1,7 @@
 package com.example.healax.user.entity;
 
 import com.example.healax.background.entity.Background;
+import com.example.healax.bookmark.entity.Bookmark;
 import com.example.healax.character.entity.Character;
 import com.example.healax.user.dto.UserDTO;
 import jakarta.persistence.*;
@@ -71,4 +72,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "character_id")
     )
     private List<Character> characters;
+
+
+    @OneToMany
+    private List<Bookmark> bookmarks;
 }
