@@ -2,6 +2,7 @@ package com.example.healax.socket.config;
 
 import com.example.healax.socket.dto.MessageDto;
 import com.example.healax.socket.service.ChatService;
+import com.example.healax.user.service.FollowService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -20,156 +21,122 @@ import java.util.*;
 
 public class MyHandler extends TextWebSocketHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyHandler.class);  // logger는 logback 도와주는 애(로그 표시)
+
+    // 현재 연결된 WebSocket 세션을 사용자 ID로 저장. sessions.
     private final Map<String, WebSocketSession> sessions = new HashMap<>();
-    private final Map<String, Set<WebSocketSession>> roomSubscribers = new HashMap<>();
+
+    // 채팅 관련 비즈니스 로직을 처리하는 서비스 ChatService
     private final ChatService chatService;
 
-    public MyHandler(ChatService chatService) {
+    // 팔로우 관련 비즈니스 로직을 처리하는 서비스 followService.
+    private final FollowService followService;
+
+    public MyHandler(ChatService chatService, FollowService followService) {
         this.chatService = chatService;
+        this.followService = followService;
     }
 
-    //최초 연결 시
+    // WebSocket 연결이 성공적으로 맺어졌을 때 호출
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        final String sessionId = session.getId();
+        final String userId = (String) session.getAttributes().get("userId");   // 세션에서 userId 추출
 
-        Map<String, String> response = new HashMap<>();
-        response.put("type", "welcome");
-        response.put("message", "연결이 성공적으로 되었습니다.");
-
-        // Convert the response to JSON
-        String jsonResponse = new ObjectMapper().writeValueAsString(response);
-
-        // Send the JSON response
-        session.sendMessage(new TextMessage(jsonResponse));
-
-        // 특정 사용자 그룹에 메시지를 보낼
-        // 사용자와 연결된 roomId 있는 경우 동일한 roomId를 가진 사용자에게 메시지를 브로드캐스트
-        Long roomId = (Long) session.getAttributes().get("roomId");
-        if (roomId != null) {
-            //  sendChatHistoryToUser(session, roomId);
-            String groupMessage = "새로운 유저가 팀에 합류했습니다.";
-            broadcastMessageToRoom(groupMessage, roomId);
-        }
+        String welcomeMessage = "{\"type\" : \"welcome\", \"message\":\"연결이 성공적으로 되었습니다.\"}";
+        session.sendMessage(new TextMessage(welcomeMessage));
 
         // 세션 저장
-        sessions.put(sessionId, session);
-
-        //연결된 모든 세션에 입장 메시지
-        sessions.values().forEach((s) -> {
-            try {
-                if (!s.getId().equals(sessionId) && s.isOpen()) {
-                    s.sendMessage(new TextMessage(jsonResponse));
-                }
-            } catch (IOException e) {
-                logger.error("Exception during connection establishment: {}", e.getMessage());
-            }
-        });
+        sessions.put(userId, session);
+        logger.info("새 웹소켓 연결이 설정되었습니다. userId: {}", userId); // 로깅
     }
 
-    //채팅방 구독
-    private void subscribeToRoom(WebSocketSession session, Long roomId) {
-        roomSubscribers.computeIfAbsent(String.valueOf(roomId), k -> new HashSet<>()).add(session);
-    }
-
-    //양방향 데이터 통신할 떄 해당 메서드가 call 된다.
+    // 클라이언트로부터 텍스트 메시지를 수신했을 때 호출
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
-        logger.info("Received cheer message payload: {}", payload); // payload 출력
-
-        //구독 메시지 확인
-        if (payload.startsWith("/sub/chat/")) {
-            // 구독 메시지에서 roomId 추출
-            Long roomId = Long.valueOf(payload.substring("/sub/chat/".length()));
-            // 세션을 해당 방에 구독
-            subscribeToRoom(session, roomId);
-            sendChatHistoryToUser(session, roomId);
-        }
-        // 발행 메시지 확인
-        else if (payload.startsWith("/pub/chat/")) {
+        logger.info("Received message payload: {}", payload);
+        // 메시지 유효성 검사
+        if (isChatMessage(message)) {
             // 발행 메시지 처리
-            handlePublicationMessage(session, message, sessions);
-        }
-        //실시간 응원글 및 기타 메시지는 기존 방식으로 처리
-        else {
-            chatService.processMessage(session, message, sessions);
+            if (payload.startsWith("/pub/chat/")) {
+                String senderId = (String) session.getAttributes().get("userId");
+                Long recipientId = getRecipientIdFromPayload(payload);
+
+                if (recipientId != null) {
+                    // 맞팔로우 확인. 맞팔인게 확인이 된다면 handlePublicationMessage()호출.
+                    if (followService.isMutualFollow(Long.valueOf(senderId), recipientId)) {
+                        handlePublicationMessage(senderId, recipientId, payload);
+                    } else {
+                        session.sendMessage(new TextMessage("양방향 팔로우 관계가 아닙니다."));
+                        logger.warn("사용자 {}가 상호 팔로우 없이 {}에게 메시지를 보내려고 시도했습니다.", senderId, recipientId); // 경고 로깅
+                    }
+                } else {
+                    logger.warn("페이로드 내 잘못된 수신자: {}", payload);
+                    session.sendMessage(new TextMessage("잘못된 수신자id 포맷입니다."));
+                }
+            } else {
+                // 기타 메시지 처리
+                chatService.processMessage(session, message, sessions);
+            }
+        } else {
+            logger.warn("잘못된 채팅 메시지 형식을 수신했습니다. 발신자 userId: {}",session.getAttributes().get("userId"));
+            session.sendMessage(new TextMessage("잘못된 메시지 포맷입니다."));
         }
     }
 
-    //웹소켓 종료
+    // 메시지 페이로드에서 recipientId(수신자 아이디) 추출하는 함수 getRecipientIdFromPayload()
+    private Long getRecipientIdFromPayload(String payload) {
+        try {
+            // 예시 페이로드 형식 : "/pub/chat/{recipientId}/{messageContent}" -> recipientId : 수신자 id, messageContent : 메시지 내용
+            String[] parts = payload.split("/");
+            if (parts.length > 2) {
+                return Long.valueOf(parts[2]); // 위 형식에서 {recipientId} 부분 추출해서 반환
+            }
+        } catch (NumberFormatException e) {
+            logger.error("비정상적인 recipientId 포맷 : {}", e.getMessage());
+        }
+        return null;    // 잘못된 형식일 경우 null값 반환. 위에 보면 예외처리 해둬서 ㄱㅊ.
+    }
+
+    // WebSocket 연결이 종료되었을 때 호출
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        final String sessionId = session.getId();
-        final String leaveMessage = sessionId + "님이 떠났습니다.";
-        sessions.remove(sessionId); // 삭제
-
-        //메시지 전송
-        sessions.values().forEach((s) -> {
-
-            if (!s.getId().equals(sessionId) && s.isOpen()) {
-                try {
-                    s.sendMessage(new TextMessage(leaveMessage));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+        final String userId = (String) session.getAttributes().get("userId");
+        sessions.remove(userId);    // 세션 제거
+        logger.info("다음 유저에 대한 웹소켓 연결이 닫혔습니다. userId: {}", userId);
     }
 
-    //통신 에러 발생 시
+    // WebSocket에서 오류가 발생했을 때 호출
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        logger.error("WebSocket error: ", exception);
     }
 
-    private void broadcastMessageToRoom(String message, Long roomId) {
-        roomSubscribers.getOrDefault(roomId, Collections.emptySet()).forEach(s -> {
-            if (s.isOpen()) {
-                try {
-                    s.sendMessage(new TextMessage(message));
-                } catch (IOException e) {
-                    // Handle exception as needed
-                }
+    // 1:1 채팅 메시지를 처리하는 메서드
+    public void handlePublicationMessage(String senderId, Long recipientId, String messageContent) {
+        WebSocketSession recipientSession = sessions.get(String.valueOf(recipientId));  // 수신자 추출해서 해당 세션을 가져오기( 위 hashmap 구조에서 유저 id(string)를 키로 갖고 있음. 해당 유저 세션 찾아서 저장.
+        if (recipientSession != null && recipientSession.isOpen()) {
+            try {
+                recipientSession.sendMessage(new TextMessage(messageContent));
+                logger.info("{}가 {}에게 메시지 전송했습니다.",senderId, recipientId);
+            } catch (IOException e) {
+                logger.error("{}가 {}에게 보내는 메시지 전송 실패, 에러 : ",senderId, recipientId, e);
             }
-        });
-
-    }
-
-    //발행 메시지를 처리하는 메서드
-    public void handlePublicationMessage(WebSocketSession session, TextMessage message, Map<String, WebSocketSession> sessions) {
-        String payload = message.getPayload();
-        //발행 메시지에서 roomId 추출
-        Long roomId = Long.valueOf(payload.substring("/pub/chat/".length()));
-
-        // 메시지를 구독자에게 브로드 캐스트
-        String publicationMessage = "채팅방에 메시지를 전송했습니다. " + roomId;
-        broadcastMessageToRoom(publicationMessage, roomId);
-    }
-
-    //이전 채팅 내용을 조회
-    private void sendChatHistoryToUser(WebSocketSession session, Long roomId) throws Exception {
-        List<MessageDto> chatHistory = chatService.getMessages(roomId);
-
-        JSONArray chatHistoryArray = new JSONArray();
-        for (MessageDto message : chatHistory) {
-            JSONObject messageObject = new JSONObject();
-            messageObject.put("senderId", message.getSenderId());
-            messageObject.put("message", message.getMessage());
-            messageObject.put("senderName", message.getSenderName());
-            messageObject.put("roomId", message.getRoomId());
-            chatHistoryArray.put(messageObject);
+        } else {
+            logger.info("다음 유저에 대한 수신자 세션이 닫혔거나 찾을 수 없습니다. userId: {}", recipientId);
         }
+    }
 
-        JSONObject historyObject = new JSONObject();
-        historyObject.put("type", "chatHistory");
-        historyObject.put("content", chatHistoryArray);
-
+    // 메시지가 유효한 형식인지 확인하는 함수
+    private boolean isChatMessage(TextMessage message) {
         try {
-            // Send the formatted chat history to the user
-            session.sendMessage(new TextMessage(historyObject.toString()));
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.readValue(message.getPayload(), MessageDto.class);
+            return true;
         } catch (IOException e) {
-            // Handle exception as needed
+            logger.error("Invalid message format", e);
+            return false;
         }
     }
 }
+

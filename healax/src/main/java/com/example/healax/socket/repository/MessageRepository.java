@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    List<Message> findByRoomIdOrderByTimeStamp(Long roomId);
+    // 특정 발신자와 수신자 간의 모든 메시지 조회 (timestamp 시간순)
+    List<Message> findBySenderIdAndRecipientIdOrRecipientIdAndSenderIdOrderByTimeStampAsc(String senderId, String recipientId, String senderId2, String recipientId2);
 
 }
