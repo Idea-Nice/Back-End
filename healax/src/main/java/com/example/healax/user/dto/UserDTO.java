@@ -29,13 +29,14 @@ public class UserDTO {
     public static UserDTO toSaveUserEntityDTO(User userEntity) {
         UserDTO userDTO = new UserDTO();
 
-        userDTO.setUserId(userEntity.getUserId());
-        userDTO.setUserPw(userEntity.getUserPw());
-        userDTO.setUserName(userEntity.getUserName());
-        userDTO.setLevel(userEntity.getLevel());
-        userDTO.setExp(userEntity.getExp());
-        userDTO.setStatus(userEntity.isStatus());
-
-        return userDTO;
+        return new UserDTO(
+        userEntity.getId(),
+        userEntity.getUserId(),
+        null,
+        userEntity.getUserName(),
+        userEntity.getLevel(),
+        userEntity.getExp(),
+        userEntity.isStatus()
+        );
     }
 }

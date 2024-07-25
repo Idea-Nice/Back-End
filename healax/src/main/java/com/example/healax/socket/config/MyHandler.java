@@ -55,11 +55,14 @@ public class MyHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String payload = message.getPayload();
         logger.info("Received message payload: {}", payload);
+
+        // 세션에서 현재 사용자의 ID를 추출
+        String sessionUserId = (String) session.getAttributes().get("userId");
         // 메시지 유효성 검사
         if (isChatMessage(message)) {
             // 발행 메시지 처리
             if (payload.startsWith("/pub/chat/")) {
-                String senderId = (String) session.getAttributes().get("userId");
+                String senderId = sessionUserId;
                 Long recipientId = getRecipientIdFromPayload(payload);
 
                 if (recipientId != null) {
@@ -74,12 +77,32 @@ public class MyHandler extends TextWebSocketHandler {
                     logger.warn("페이로드 내 잘못된 수신자: {}", payload);
                     session.sendMessage(new TextMessage("잘못된 수신자id 포맷입니다."));
                 }
+            } else if (payload.startsWith("/sub/chat/history/")) {
+                // 채팅 기록 조회 요청 처리
+                String senderId = sessionUserId;
+                Long recipientId = getRecipientIdFromPayload(payload);
+
+                // 가장 먼저 사용자가 채팅기록 조회를 요청하면 자신과의 채팅 기록만 조회할 수 있어야 하므로 senderId와 세션의 userId가 일치하는지 확인한다.
+                if (senderId.equals(sessionUserId)) {
+                    if (recipientId != null) {
+                        // chatService를 통해 채팅 기록을 가져옴(시간순)
+                        List<MessageDto> chatHistory = chatService.getMessageBetweenUsers(senderId, String.valueOf(recipientId));
+                        // 클라이언트에게 채팅 기록 전송
+                        session.sendMessage(new TextMessage(new ObjectMapper().writeValueAsString(chatHistory)));
+                    } else {
+                        logger.warn("다음 페이로드의 recipientId형식이 잘못되었습니다. {}", payload);
+                        session.sendMessage(new TextMessage("유효하지 않은 recipientId 포맷"));
+                    }
+                } else {
+                    logger.warn("채팅 기록에 대한 액세스 권한이 없습니다. UserId: {}, RequestedSenderId: {}", sessionUserId, senderId);
+                    session.sendMessage(new TextMessage("인가되지 않은(Unauthorized) 채팅 기록 접근입니다."));
+                }
             } else {
                 // 기타 메시지 처리
                 chatService.processMessage(session, message, sessions);
             }
         } else {
-            logger.warn("잘못된 채팅 메시지 형식을 수신했습니다. 발신자 userId: {}",session.getAttributes().get("userId"));
+            logger.warn("잘못된 채팅 메시지 형식을 수신했습니다. 발신자 userId: {}", session.getAttributes().get("userId"));
             session.sendMessage(new TextMessage("잘못된 메시지 포맷입니다."));
         }
     }
@@ -118,9 +141,9 @@ public class MyHandler extends TextWebSocketHandler {
         if (recipientSession != null && recipientSession.isOpen()) {
             try {
                 recipientSession.sendMessage(new TextMessage(messageContent));
-                logger.info("{}가 {}에게 메시지 전송했습니다.",senderId, recipientId);
+                logger.info("{}가 {}에게 메시지 전송했습니다.", senderId, recipientId);
             } catch (IOException e) {
-                logger.error("{}가 {}에게 보내는 메시지 전송 실패, 에러 : ",senderId, recipientId, e);
+                logger.error("{}가 {}에게 보내는 메시지 전송 실패, 에러 : ", senderId, recipientId, e);
             }
         } else {
             logger.info("다음 유저에 대한 수신자 세션이 닫혔거나 찾을 수 없습니다. userId: {}", recipientId);
