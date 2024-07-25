@@ -41,6 +41,13 @@ public class TodolistController {
         return ResponseEntity.ok(createTodo);
     }
 
+    // 완료 상태 바꾸기. //여기 id는 투두리스트 id
+    @PostMapping("/toggle/{userId}/{id}")
+    public ResponseEntity<Todolist> toggleCompletionStatus(@PathVariable String userId, @PathVariable Long id) {
+        Todolist updatedTodo = todolistService.toggleCompletionStatus(id, userId);
+        return ResponseEntity.ok(updatedTodo);
+    }
+
     // todolist 수정. (todolist id와 userId로 수정)
     @PostMapping("/modify/{userId}/{id}")
     public ResponseEntity<Todolist> updateTodolist(@RequestBody Todolist todolist, @PathVariable String userId, @PathVariable Long id) {

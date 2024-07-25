@@ -16,7 +16,7 @@ public class Todolist {
 
     private String title;
 
-    private boolean completed;
+    private boolean completed; // 완료 true, 미완료 false
 
     @ManyToOne
     @JoinColumn(name = "user_id")

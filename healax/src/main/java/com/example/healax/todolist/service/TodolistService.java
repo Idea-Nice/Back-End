@@ -33,6 +33,23 @@ public class TodolistService {
         return todolistRepository.save(todolist);
     }
 
+    // 완료 상태변경 (완료 -> 미완료, 미완료 -> 완료)
+    public Todolist toggleCompletionStatus(Long id, String userId) {
+        Optional<Todolist> todolistOptional = todolistRepository.findById(id);
+        if (todolistOptional.isPresent()) {
+            Todolist todolist = todolistOptional.get();
+            if (todolist.getUser().getUserId().equals(userId)) {
+                // 완료 상태 토글
+                todolist.setCompleted(!todolist.isCompleted());
+                return todolistRepository.save(todolist);
+            } else {
+                throw new IllegalArgumentException("투두리스트 수정 오류: 해당 유저에게 권한이 없습니다. userId: " + userId);
+            }
+        } else {
+            throw new IllegalArgumentException("투두리스트 수정 오류: 해당 투두리스트를 찾을 수 없습니다. id: " + id);
+        }
+    }
+
     public Todolist updateTodolist(Todolist todolist, String userId, Long id) {
         Optional<User> user = userRepository.findByUserId(userId);
         if (user.isPresent()) {
