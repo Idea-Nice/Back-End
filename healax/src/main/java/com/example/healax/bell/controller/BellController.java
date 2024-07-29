@@ -46,4 +46,11 @@ public class BellController {
         bellService.deleteBell(bellId);
         return ResponseEntity.noContent().build();
     }
+
+    // 알람 여러개 한번에 삭제
+    @DeleteMapping("/deleteMany")
+    public ResponseEntity<Void> deleteManyBells(@RequestBody List<Long> bellIds) {
+        bellIds.forEach(bellService::deleteBell);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -61,4 +61,11 @@ public class TodolistController {
         todolistService.deleteTodolistById(id);
         return ResponseEntity.noContent().build();
     }
+
+    // 여러개 한번에 삭제. (json으로 todolist Id 여러개 받음)
+    @DeleteMapping("/deleteMany/{userId}")
+    public ResponseEntity<Void> deleteManyTodolists(@PathVariable String userId, @RequestBody List<Long> ids) {
+        todolistService.deleteManyTodolists(userId, ids);
+        return ResponseEntity.noContent().build();
+    }
 }

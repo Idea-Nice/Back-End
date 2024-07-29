@@ -70,4 +70,12 @@ public class TodolistService {
     public void deleteTodolistById(Long id) {
         todolistRepository.deleteById(id);
     }
+
+    // 여러 todolist 항목 삭제 (todolist id 목록으로 삭제)
+    public void deleteManyTodolists(String userId, List<Long> ids) {
+        List<Todolist> todolists = todolistRepository.findAllById(ids);
+        todolists.stream()
+                .filter(todolist -> todolist.getUser().getUserId().equals(userId))
+                .forEach(todolistRepository::delete);
+    }
 }

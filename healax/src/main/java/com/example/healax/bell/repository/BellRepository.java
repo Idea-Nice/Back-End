@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface BellRepository extends JpaRepository<Bell, Long> {
-    List<Bell> findByUser_UserId(String userId);
+    List<Bell> findByUser_UserId(String userId);    //User테이블(엔티티)에서 userId를 검색하기 위한 함수이름
 }

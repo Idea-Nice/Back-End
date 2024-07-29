@@ -7,6 +7,7 @@ import com.example.healax.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,4 +39,15 @@ public class BellService {
     public void deleteBell(Long bell_id) {
         bellRepository.deleteById(bell_id);
     }
+
+    // 사용 안함. 이거 일정기간마다 실행하는 방법 말고,
+    // 프론트에서 확인눌러서 삭제되는걸로 ㄱㄱ
+//    public void deleteNonRepeatingAlarms() {
+//        List<Bell> bells = bellRepository.findAll();
+//        for (Bell bell : bells) {
+//            if (bell.getRepeatDays().isEmpty() && bell.getTime().isBefore(LocalDateTime.now())) {
+//                deleteBell(bell.getId());
+//            }
+//        }
+//    }
 }
