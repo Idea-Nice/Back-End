@@ -1,18 +1,17 @@
 package com.example.healax.user.entity;
 
-import com.example.healax.user.dto.UserDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "user")
 public class User {
 
@@ -20,36 +19,36 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, length = 100, unique = true)
     private String userId;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 100)
     private String userPw;
 
     @Column(nullable = false, length = 30)
     private String userName;
 
-    @ColumnDefault("0")
-    @Column(nullable = false)
-    private String level = "0";
+    @Column
+    private String oauth;
 
-    @ColumnDefault("0")
     @Column(nullable = false)
-    private String exp = "0";
+    private int level = 0;
+
+    @Column(nullable = false)
+    private int exp = 0;
 
     @ColumnDefault("1")
     @Column(nullable = false)
     private boolean status;
 
-    public static User toSaveUserEntity(UserDTO userDTO) {
+    @Column
+    private String profileMusic;
 
-        User userEntity = new User();
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followers;
 
-        userEntity.userId = userDTO.getUserId();
-        userEntity.userPw = userDTO.getUserPw();
-        userEntity.userName = userDTO.getUserName();
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> following;
 
-        return userEntity;
-    }
 
 }

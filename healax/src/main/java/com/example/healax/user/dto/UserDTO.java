@@ -1,10 +1,7 @@
 package com.example.healax.user.dto;
 
 import com.example.healax.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -20,9 +17,9 @@ public class UserDTO {
 
     private String userName;
 
-    private String level;
+    private int level;
 
-    private String exp;
+    private int exp;
 
     private boolean status;
 

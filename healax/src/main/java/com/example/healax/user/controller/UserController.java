@@ -15,9 +15,10 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/login")
-    public String loginHome() {
-        return "login";
+
+    @GetMapping("/loginPage")
+    public String loginPage() {
+        return "loginPage";
     }
 
     //회원가입
@@ -81,8 +82,9 @@ public class UserController {
 
     //로그아웃
     @PostMapping("/logout")
-    public String logout(){
-        return "redirect:/login";
+    public String logout(@RequestBody Long user_id){
+        userService.logoutUser(user_id);
+        return "redirect:/loginPage";
     }
 
 }

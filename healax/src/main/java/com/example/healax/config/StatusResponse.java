@@ -9,9 +9,14 @@ import org.springframework.http.HttpStatus;
 @Getter
 @Setter
 public class StatusResponse {
+
     private int code;
+
     private HttpStatus httpStatus;
+
     private String status;
+
     private String message;
+
     private Object data;
 }
