@@ -17,12 +17,12 @@ import java.util.List;
 @RequestMapping("/calendar")
 public class CalendarController {
 
-    private final CalendarService calenderService;
+    private final CalendarService calendarService;
 
     // 해당 유저 캘린더 리스트로 가져오기
     @GetMapping("/list/{user_id}")
     public ResponseEntity<CommonResponse> getCalenderList(@PathVariable String user_id) {
-        List<CalendarDTO> calenderList = calenderService.getCalendarList(user_id);
+        List<CalendarDTO> calenderList = calendarService.getCalendarList(user_id);
         CommonResponse res = new CommonResponse(
                 200,
                 HttpStatus.OK,
@@ -35,7 +35,7 @@ public class CalendarController {
     // 새로운 캘린더 저장하기
     @PostMapping("/create/{user_id}")
     public ResponseEntity<CommonResponse> createCalender(@PathVariable String user_id, @RequestBody CalendarDTO calendarDTO) {
-        calenderService.saveCalendar(user_id, calendarDTO);
+        calendarService.saveCalendar(user_id, calendarDTO);
         CommonResponse res = new CommonResponse(
                 200,
                 HttpStatus.OK,
@@ -45,9 +45,10 @@ public class CalendarController {
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
 
-    @PostMapping("/update/{user_id}")
-    public ResponseEntity<CommonResponse> updateCalender(@PathVariable String user_id, @RequestBody CalendarDTO calendarDTO) {
-        calenderService.updateCalendar(user_id, calendarDTO);
+    // 캘린더 수정하기
+    @PutMapping("/update/{user_id}/{calendar_id}")
+    public ResponseEntity<CommonResponse> updateCalendar(@PathVariable String user_id, @PathVariable Long calendar_id, @RequestBody CalendarDTO calendarDTO) {
+        calendarService.updateCalendar(user_id, calendar_id, calendarDTO);
         CommonResponse res = new CommonResponse(
                 200,
                 HttpStatus.OK,
@@ -59,7 +60,7 @@ public class CalendarController {
 
     @DeleteMapping("/delete/{user_id}/{calendar_id}")
     public ResponseEntity<CommonResponse> deleteCalender(@PathVariable String user_id, @PathVariable Long calendar_id) {
-        calenderService.deleteCalendar(user_id, calendar_id);
+        calendarService.deleteCalendar(user_id, calendar_id);
         CommonResponse res = new CommonResponse(
                 200,
                 HttpStatus.OK,

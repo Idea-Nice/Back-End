@@ -15,8 +15,8 @@ public class UserStatusService {
     private final UserRepository userRepository;
 
     //회원 상태 가져오기
-    public String getStatus(Long userId) {
-        Optional<User> userEntity = userRepository.findById(userId);
+    public String getStatus(String userId) {
+        Optional<User> userEntity = userRepository.findByUserId(userId);
 
         if (userEntity.isPresent()) {
             User user = userEntity.get();

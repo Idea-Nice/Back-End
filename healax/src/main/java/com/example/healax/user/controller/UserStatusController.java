@@ -21,7 +21,7 @@ public class UserStatusController {
 
     //회원 상태 가져오기
     @GetMapping("/status-get/{user_id}")
-    public ResponseEntity<StatusResponse> userStatus(@PathVariable Long user_id) {
+    public ResponseEntity<StatusResponse> userStatus(@PathVariable String user_id) {
         String status = userStatusService.getStatus(user_id);
 
         StatusResponse res = new StatusResponse(

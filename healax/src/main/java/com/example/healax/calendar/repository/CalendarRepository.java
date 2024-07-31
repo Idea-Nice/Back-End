@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CalenderRepository extends JpaRepository<Calendar, Long> {
-    List<Calendar> findByUserId(String userId);
+public interface CalendarRepository extends JpaRepository<Calendar, Long> {
+    List<Calendar> findByUser_userId(String userId);
 }

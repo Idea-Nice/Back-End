@@ -52,14 +52,14 @@ public class UserController {
 
     //회원정보 수정
     @PostMapping("/user-modify/{user_id}")
-    public ResponseEntity<String> userModify(@PathVariable Long user_id, @RequestParam String userPw, @RequestParam String userName) {
+    public ResponseEntity<String> userModify(@PathVariable String user_id, @RequestParam String userPw, @RequestParam String userName) {
         userService.userUpdate(user_id, userPw, userName);
         return ResponseEntity.status(HttpStatus.OK).body("회원정보가 수정되었습니다.");
     }
 
     //회원 탈퇴
     @DeleteMapping("/user-delete/{user_id}")
-    public String userDelete(@PathVariable Long user_id) {
+    public String userDelete(@PathVariable String user_id) {
         userService.delete(user_id);
         return "redirect:/login";
     }
@@ -81,7 +81,7 @@ public class UserController {
 
     //로그아웃
     @PostMapping("/logout")
-    public String logout(@RequestBody Long user_id){
+    public String logout(@RequestBody String user_id){
         userService.logoutUser(user_id);
         return "redirect:/loginPage";
     }

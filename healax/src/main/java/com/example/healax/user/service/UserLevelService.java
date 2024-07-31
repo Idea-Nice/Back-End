@@ -20,8 +20,8 @@ public class UserLevelService {
 
 
     //회원 레벨 가져오기
-    public Integer getLevel(Long user_Id) {
-        Optional<User> userEntity = userRepository.findById(user_Id);
+    public Integer getLevel(String user_Id) {
+        Optional<User> userEntity = userRepository.findByUserId(user_Id);
 
         if (userEntity.isPresent()) {
             User user = userEntity.get();

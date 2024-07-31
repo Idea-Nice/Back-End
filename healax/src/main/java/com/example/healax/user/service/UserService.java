@@ -50,8 +50,8 @@ public class UserService {
     }
 
     //유저 삭제
-    public void delete(Long user_Id) {
-        Optional<User> userEntity = userRepository.findById(user_Id);
+    public void delete(String user_Id) {
+        Optional<User> userEntity = userRepository.findByUserId(user_Id);
         if (userEntity.isPresent()) {
             userRepository.delete(userEntity.get());
         } //else {
@@ -89,8 +89,8 @@ public class UserService {
     }
 
     //유저 정보 수정하기
-    public void userUpdate(Long userId, String userPw, String userName) {
-        Optional<User> userEntityOptional = userRepository.findById(userId);
+    public void userUpdate(String userId, String userPw, String userName) {
+        Optional<User> userEntityOptional = userRepository.findByUserId(userId);
 
         System.out.println("userEntity = " + userEntityOptional);
         if (userEntityOptional.isPresent()) {
@@ -112,7 +112,7 @@ public class UserService {
 //        userLevelService.updateLastLoginTime(user_Id);
     }
 
-    public void logoutUser(Long user_Id) {
+    public void logoutUser(String user_Id) {
         loggedInUsers.remove(user_Id);
     }
 
