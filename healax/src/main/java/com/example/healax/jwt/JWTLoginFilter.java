@@ -1,6 +1,7 @@
 package com.example.healax.jwt;
 
 import com.example.healax.user.dto.CustomUserDetailsDTO;
+import com.example.healax.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +18,8 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
     private final JWTUtil jwtUtil;
+
+    private final UserService userService; // UserService 추가
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
@@ -42,6 +45,8 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtUtil.createJWT(userId, 3600000);
 
         res.addHeader("Authorization", "Bearer " + token);
+
+        userService.loginUser(customUserDetailsDTO.getUsername());
     }
 
     @Override

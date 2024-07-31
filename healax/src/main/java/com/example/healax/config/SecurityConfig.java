@@ -6,6 +6,7 @@ import com.example.healax.jwt.JWTLoginFilter;
 import com.example.healax.jwt.JWTUtil;
 //import com.example.healax.kakao.servce.KakaoOauth2UserService;
 //import com.example.healax.oauth2.CustomSuccessHandler;
+import com.example.healax.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -142,7 +143,7 @@ public class SecurityConfig {
 //    }
 
     @Bean
-    public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain2(HttpSecurity http, UserService userService) throws Exception {
         http
                 .cors(cors -> cors
                         .configurationSource(new CorsConfigurationSource() {
@@ -158,6 +159,7 @@ public class SecurityConfig {
                                 return configuration;
                             }
                         }))
+
                 .csrf(csrf -> csrf.disable())
 
                 .formLogin(login -> login.disable())
@@ -168,9 +170,9 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/signup", "/idCheck", "/loginPage").permitAll()
                         .anyRequest().authenticated())
 
-                .addFilterBefore(new JWTFilter(jwtUtil), JWTLoginFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil, userService), JWTLoginFilter.class)
 
-                .addFilterAt(new JWTLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new JWTLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, userService), UsernamePasswordAuthenticationFilter.class)
 
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

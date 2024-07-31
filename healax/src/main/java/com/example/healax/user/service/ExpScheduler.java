@@ -23,10 +23,10 @@ public class ExpScheduler {
     @Scheduled(fixedRate = 60000)
     public void incrementExp() {
 
-        Set<Long> loggedInUsers = userService.getLoggedInUsers();
+        Set<String > loggedInUsers = userService.getLoggedInUsers();
 
-        for (Long user_Id : loggedInUsers) {
-            Optional<User> userOptional = userRepository.findById(user_Id);
+        for (String userId : loggedInUsers) {
+            Optional<User> userOptional = userRepository.findByUserId(userId);
 
             System.out.println("userOptional 11111111111111: " + userOptional);
 

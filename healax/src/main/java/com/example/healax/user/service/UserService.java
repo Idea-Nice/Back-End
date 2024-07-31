@@ -20,7 +20,7 @@ public class UserService {
 
 //    private final UserLevelService userLevelService;
 
-    private final Set<Long> loggedInUsers = ConcurrentHashMap.newKeySet();
+    private final Set<String> loggedInUsers = ConcurrentHashMap.newKeySet();
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -73,7 +73,9 @@ public class UserService {
             if(userEntity.getUserPw().equals(userDTO.getUserPw())) {
                 UserDTO userLoginDTO = UserDTO.toSaveUserEntityDTO(userEntity);
 
-                loginUser(userEntity.getId());
+                loginUser(userEntity.getUserId());
+
+                System.out.println("userEntity.getId()" + userEntity.getId());
 
 //                userLevelService.updateLastLoginTime(userEntity.getId());
 
@@ -105,8 +107,8 @@ public class UserService {
 //        }
     }
 
-    public void loginUser(Long user_Id) {
-        loggedInUsers.add(user_Id);
+    public void loginUser(String userId) {
+        loggedInUsers.add(userId);
 //        userLevelService.updateLastLoginTime(user_Id);
     }
 
@@ -114,7 +116,7 @@ public class UserService {
         loggedInUsers.remove(user_Id);
     }
 
-    public Set<Long> getLoggedInUsers() {
+    public Set<String> getLoggedInUsers() {
         return loggedInUsers;
     }
 

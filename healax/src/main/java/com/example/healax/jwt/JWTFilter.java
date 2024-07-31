@@ -2,6 +2,7 @@ package com.example.healax.jwt;
 
 import com.example.healax.user.dto.CustomUserDetailsDTO;
 import com.example.healax.user.entity.User;
+import com.example.healax.user.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,8 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
+
+    private final UserService userService; // UserService 추가
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -57,6 +60,9 @@ public class JWTFilter extends OncePerRequestFilter {
         Authentication authenticationToken = new UsernamePasswordAuthenticationToken(customUserDetailsDTO, null, customUserDetailsDTO.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+        // 사용자 ID를 UserService로 전달하여 로그인 처리
+        userService.loginUser(customUserDetailsDTO.getUsername());
 
         filterChain.doFilter(request, response);
     }
