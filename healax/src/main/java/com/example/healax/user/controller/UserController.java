@@ -81,8 +81,9 @@ public class UserController {
 
     //로그아웃
     @PostMapping("/logout")
-    public String logout(){
-        return "redirect:/login";
+    public String logout(@RequestBody Long user_id){
+        userService.logoutUser(user_id);
+        return "redirect:/loginPage";
     }
 
 }

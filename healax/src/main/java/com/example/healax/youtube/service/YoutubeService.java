@@ -15,10 +15,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
-public class YoutubeSearchService {
+public class YoutubeService {
 
     @Autowired
     private YouTube youTube;
@@ -92,5 +94,39 @@ public class YoutubeSearchService {
         }
 
         return top20VideoDetails;
+    }
+
+    // Video Url에서 Video ID 추출하는 메서드
+    public String extractVideoIdFromUrl(String url) {
+        String videoId = null;
+
+        // 모바일, 웹 브라우저, 기타 브라우저 접속 URL 양식 모두 지원하기 위해 패턴 사용
+        String pattern = "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed\\%2F|youtu.be\\%2F|\\/v\\%2F)[^#\\&\\?\\n]*";
+
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(url);
+
+        if (matcher.find()) {
+            videoId = matcher.group();
+        }
+
+        return videoId;
+    }
+
+    // Video ID로부터 비디오 상세 정보 가져오는 메서드
+    public JsonNode getVideoDetails(String videoId) throws IOException {
+        YouTube.Videos.List videosList = youTube.videos().list("id,snippet,statistics");
+        videosList.setId(videoId);
+        videosList.setKey(apiKey);
+
+        VideoListResponse videoResponse = videosList.execute();
+        List<Video> videos = videoResponse.getItems();
+
+        if (videos.isEmpty()) {
+            throw new IOException("비디오 ID에 해당하는 비디오를 찾을 수 없습니다.");
+        }
+
+        Video video = videos.get(0);
+        return objectMapper.valueToTree(video);
     }
 }

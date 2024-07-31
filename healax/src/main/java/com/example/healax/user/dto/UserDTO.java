@@ -20,9 +20,9 @@ public class UserDTO {
 
     private String userName;
 
-    private String level;
+    private int level;
 
-    private String exp;
+    private int exp;
 
     private boolean status;
 

@@ -18,7 +18,7 @@ public class UserLevelController {
     //회원 레벨 가져오기
     @GetMapping("/level-get/{user_id}")
     public ResponseEntity<LevelResponse> userLevel(@PathVariable Long user_id) {
-        String level = userLevelStatusService.getLevel(user_id);
+        Integer level = userLevelStatusService.getLevel(user_id);
 
         LevelResponse res = new LevelResponse(
                 200,

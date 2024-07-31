@@ -1,11 +1,10 @@
 package com.example.healax.youtube.controller;
 
-import com.example.healax.youtube.service.YoutubeSearchService;
+import com.example.healax.user.service.UserVideoHistoryService;
+import com.example.healax.youtube.service.YoutubeService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,10 +14,26 @@ import java.util.List;
 public class YoutubeController {
 
     @Autowired
-    private YoutubeSearchService youtubeSearchService;
+    private YoutubeService youtubeService;
 
+    @Autowired
+    private UserVideoHistoryService userVideoHistoryService;
+
+    // lofi 검색 top 20 가져오기
     @GetMapping("/lofiTop20")
     public List<JsonNode> getTop20LofiVideos() throws IOException {
-        return youtubeSearchService.searchTop20Videos("lofi");
+        return youtubeService.searchTop20Videos("lofi");
+    }
+
+    // 시청 기록 저장하기
+    @PostMapping("/saveVideoHistory")
+    public void saveVideoHistory(@RequestParam String userId, @RequestParam String videoUrl) throws IOException {
+        String videoId = youtubeService.extractVideoIdFromUrl(videoUrl);
+        if (videoId == null) {
+            throw new IllegalArgumentException("유효하지 않은 URL입니다.");
+        }
+
+        JsonNode videoDetails = youtubeService.getVideoDetails(videoId);
+        userVideoHistoryService.saveUserVideoHistory(userId, videoDetails);
     }
 }
