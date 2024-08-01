@@ -1,5 +1,6 @@
 package com.example.healax.bell.controller;
 
+import com.example.healax.bell.dto.BellDTO;
 import com.example.healax.bell.entity.Bell;
 import com.example.healax.bell.service.BellService;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +22,22 @@ public class BellController {
 
     // 해당 유저 알람 조회
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Bell>> getBellsByUserId(@PathVariable String userId) {
-        List<Bell> bells = bellService.getBellsByUserId(userId);
+    public ResponseEntity<List<BellDTO>> getBellsByUserId(@PathVariable String userId) {
+        List<BellDTO> bells = bellService.getBellsByUserId(userId);
         return ResponseEntity.ok(bells);
     }
 
     // 신규 알람 저장하기
     @PostMapping("/save/{userId}")
-    public ResponseEntity<Bell> saveBell(@RequestBody Bell bell, @PathVariable String userId) {
-        Bell saveBell = bellService.saveBell(bell, userId);
-        return ResponseEntity.ok(saveBell);
+    public ResponseEntity<BellDTO> saveBell(@RequestBody Bell bell, @PathVariable String userId) {
+        BellDTO savedBell = bellService.saveBell(bell, userId);
+        return ResponseEntity.ok(savedBell);
     }
 
     // 알람 수정하기
     @PostMapping("/modify/{userId}")
-    public ResponseEntity<Bell> modifyBell(@RequestBody Bell bell, @PathVariable String userId) {
-        Bell modifiedBell = bellService.modifyBell(bell, userId);
+    public ResponseEntity<BellDTO> modifyBell(@RequestBody Bell bell, @PathVariable String userId) {
+        BellDTO modifiedBell = bellService.modifyBell(bell, userId);
         return ResponseEntity.ok(modifiedBell);
     }
 
@@ -50,7 +51,7 @@ public class BellController {
     // 알람 여러개 한번에 삭제
     @DeleteMapping("/deleteMany")
     public ResponseEntity<Void> deleteManyBells(@RequestBody List<Long> bellIds) {
-        bellIds.forEach(bellService::deleteBell);
+        bellService.deleteManyBells(bellIds);
         return ResponseEntity.noContent().build();
     }
 }

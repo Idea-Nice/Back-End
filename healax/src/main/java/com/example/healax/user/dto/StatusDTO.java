@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StatusDTO {
 
-    private Long userId;
+    private String userId;
 
     private boolean status;
 }

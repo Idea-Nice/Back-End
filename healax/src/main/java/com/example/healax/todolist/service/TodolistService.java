@@ -1,5 +1,6 @@
 package com.example.healax.todolist.service;
 
+import com.example.healax.todolist.dto.TodolistDTO;
 import com.example.healax.todolist.entity.Todolist;
 import com.example.healax.todolist.repository.TodolistRepository;
 import com.example.healax.user.entity.User;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TodolistService {
@@ -19,18 +21,29 @@ public class TodolistService {
         this.userRepository = userRepository;
     }
 
-    public List<Todolist> getTodolistByUserId(String userId) {
-        return todolistRepository.findByUser_UserId(userId);
+    public List<TodolistDTO> getTodolistByUserId(String userId) {
+        List<Todolist> todolists = todolistRepository.findByUser_UserId(userId);
+        return todolists.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public Optional<Todolist> getTodolistById(Long id) {
-        return todolistRepository.findById(id);
+    public Optional<TodolistDTO> getTodolistById(Long id) {
+        return todolistRepository.findById(id).map(this::toDTO);
     }
 
     public Todolist createTodolist(Todolist todolist, String userId) {
         Optional<User> user = userRepository.findByUserId(userId);
         user.ifPresent(todolist::setUser);
         return todolistRepository.save(todolist);
+    }
+
+    // Todolist를 DTO로 변환
+    public TodolistDTO toDTO (Todolist todolist) {
+        TodolistDTO dto = new TodolistDTO();
+        dto.setId(todolist.getId());
+        dto.setTitle(todolist.getTitle());
+        dto.setCompleted(todolist.isCompleted());
+        dto.setUserId(todolist.getUser().getUserId());
+        return dto;
     }
 
     // 완료 상태변경 (완료 -> 미완료, 미완료 -> 완료)

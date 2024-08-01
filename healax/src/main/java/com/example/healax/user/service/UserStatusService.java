@@ -33,7 +33,7 @@ public class UserStatusService {
 
     //회원 상태 저장하기
     public void save(StatusDTO statusDTO) {
-        Optional<User> userEntity = userRepository.findById(statusDTO.getUserId());
+        Optional<User> userEntity = userRepository.findByUserId(statusDTO.getUserId());
 
         if(userEntity.isPresent()) {
             User user = userEntity.get();

@@ -8,6 +8,7 @@ import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class YoutubeService {
     private String apiKey;
 
     @Autowired
+    @Qualifier("youtubeObjectMapper")
     private ObjectMapper objectMapper;
 
     // 검색어(keyword) 입력해 조회수 상위 20개 영상정보 가져오는 메서드

@@ -1,11 +1,15 @@
 package com.example.healax.user.service;
 
+import com.example.healax.asmr.repository.AsmrRepository;
+import com.example.healax.asmr.repository.UserAsmrRepository;
+import com.example.healax.asmr.service.AsmrService;
 import com.example.healax.user.dto.UserDTO;
 import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,7 +26,9 @@ public class UserService {
 
     private final Set<String> loggedInUsers = ConcurrentHashMap.newKeySet();
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AsmrService asmrService;
+
+//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     //아이디 중복 확인
     public String idCheck(String userId) {
@@ -40,13 +46,23 @@ public class UserService {
 
     //유저 회원가입
     public void save(UserDTO userDTO) {
-        User userEntity = new User();
+        try {
+            User userEntity = new User();
 
-        userEntity.setUserId(userDTO.getUserId());
-        userEntity.setUserPw(bCryptPasswordEncoder.encode(userDTO.getUserPw()));
-        userEntity.setUserName(userDTO.getUserName());
+            userEntity.setUserId(userDTO.getUserId());
+            userEntity.setUserPw(userDTO.getUserPw());
+            userEntity.setUserName(userDTO.getUserName());
+            userEntity.setLevel(1);
+            userEntity.setExp(0);
 
-        userRepository.save(userEntity);
+            userRepository.save(userEntity);
+
+            // 기본 ASMR 접근 권한 부여하기
+            asmrService.grantAccessToAsmr(userEntity.getUserId(), 1L); // 기본 asmr id 1 접근권한 부여
+
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("중복되는 id 입니다. 다른 id를 입력해주세요. 예외 내용 : " + e);
+        }
     }
 
     //유저 삭제

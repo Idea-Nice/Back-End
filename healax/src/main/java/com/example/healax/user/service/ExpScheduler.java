@@ -19,7 +19,6 @@ public class ExpScheduler {
 
     private final UserLevelService userLevelService;
 
-
     @Scheduled(fixedRate = 60000)
     public void incrementExp() {
 
@@ -28,20 +27,10 @@ public class ExpScheduler {
         for (String userId : loggedInUsers) {
             Optional<User> userOptional = userRepository.findByUserId(userId);
 
-            System.out.println("userOptional 11111111111111: " + userOptional);
-
             if (userOptional.isPresent()) {
-
                 User user = userOptional.get();
-
-                System.out.println("user 22222222222222: " + user);
-
-
-                userLevelService.addExp(user.getId());
-//                userLevelService.updateLastLoginTime(user.getId());
-
+                userLevelService.addExp(user.getUserId());
             }
         }
-
     }
 }

@@ -1,5 +1,6 @@
 package com.example.healax.user.entity;
 
+import com.example.healax.asmr.entity.UserAsmr;
 import com.example.healax.background.entity.Background;
 import com.example.healax.bookmark.entity.Bookmark;
 import com.example.healax.character.entity.Character;
@@ -33,14 +34,17 @@ public class User {
     private String userName;
 
     @Column(nullable = false)
-    private int level = 0;
+    private int level = 1;
 
     @Column(nullable = false)
-    private int exp = 0;
+    private int exp = 1;
 
-    @ColumnDefault("1")
+    @ColumnDefault("0")
     @Column(nullable = false)
     private boolean status;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAsmr> userAsmrs;
 
     @Column
     private String profileMusic;

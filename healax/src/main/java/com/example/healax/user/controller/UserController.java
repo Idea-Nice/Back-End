@@ -57,13 +57,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("회원정보가 수정되었습니다.");
     }
 
-    //회원 탈퇴
-    @DeleteMapping("/user-delete/{user_id}")
-    public String userDelete(@PathVariable String user_id) {
-        userService.delete(user_id);
-        return "redirect:/login";
-    }
-
     //로그인
     @PostMapping("/login")
     public ResponseEntity<CommonResponse> login(@RequestBody UserDTO userDTO) {
@@ -79,11 +72,28 @@ public class UserController {
         }
     }
 
+    //회원 탈퇴
+    @DeleteMapping("/user-delete/{user_id}")
+    public ResponseEntity<CommonResponse> userDelete(@PathVariable String user_id) {
+        userService.delete(user_id);
+        CommonResponse res = new CommonResponse(
+                200,
+                HttpStatus.OK,
+                " 회원탈퇴 성공",
+                null
+        );
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }
     //로그아웃
     @PostMapping("/logout")
-    public String logout(@RequestBody String user_id){
+    public ResponseEntity<CommonResponse> logout(@RequestBody String user_id){
         userService.logoutUser(user_id);
-        return "redirect:/loginPage";
+        CommonResponse res = new CommonResponse(
+                200,
+                HttpStatus.OK,
+                " 로그아웃 성공",
+                null
+        );
+        return new ResponseEntity<>(res, res.getHttpStatus());
     }
-
 }

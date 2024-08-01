@@ -10,6 +10,7 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,13 @@ public class BookmarkService {
     private String apiKey;
 
     @Autowired
+    @Qualifier("youtubeObjectMapper")
     private ObjectMapper objectMapper;
+
+    @Autowired
+    public BookmarkService(@Qualifier("jacksonObjectMapper") ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     // 새로운 찜 영상 추가
     public Bookmark saveBookmark(String videoId, String userId) throws IOException {
