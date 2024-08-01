@@ -83,6 +83,6 @@ public class User {
     private List<Character> characters;
 
 
-    @OneToMany
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bookmark> bookmarks;
 }

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CalendarDTO {
 
+    private Long id;
     private String title;
     private String content;
     private LocalDateTime startday;

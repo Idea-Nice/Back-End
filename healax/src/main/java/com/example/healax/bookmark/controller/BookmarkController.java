@@ -1,6 +1,7 @@
 package com.example.healax.bookmark.controller;
 
 
+import com.example.healax.bookmark.dto.BookmarkDTO;
 import com.example.healax.bookmark.entity.Bookmark;
 import com.example.healax.bookmark.service.BookmarkService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,13 @@ public class BookmarkController {
 
     // 찜 목록 생성하기
     @PostMapping("/create/{userId}")
-    public Bookmark saveBookmark(@PathVariable String userId, @RequestParam String videoId) throws IOException {
+    public BookmarkDTO saveBookmark(@PathVariable String userId, @RequestParam String videoId) throws IOException {
         return bookmarkService.saveBookmark(videoId, userId);
     }
 
     // 해당 유저 북마크 목록 조회
     @GetMapping("/{userId}")
-    public List<Bookmark> getBookmarks(@PathVariable String userId) {
+    public List<BookmarkDTO> getBookmarks(@PathVariable String userId) {
         return bookmarkService.getBookmarks(userId);
     }
 

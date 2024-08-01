@@ -35,10 +35,10 @@ public class UserVideoHistory {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 10000)
     private String tags;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length=500000)
     private String description;
 
     @Column(nullable = false)

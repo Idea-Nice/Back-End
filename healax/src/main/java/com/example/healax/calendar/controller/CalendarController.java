@@ -46,7 +46,7 @@ public class CalendarController {
     }
 
     // 캘린더 수정하기
-    @PutMapping("/update/{user_id}/{calendar_id}")
+    @PostMapping("/update/{user_id}/{calendar_id}")
     public ResponseEntity<CommonResponse> updateCalendar(@PathVariable String user_id, @PathVariable Long calendar_id, @RequestBody CalendarDTO calendarDTO) {
         calendarService.updateCalendar(user_id, calendar_id, calendarDTO);
         CommonResponse res = new CommonResponse(
