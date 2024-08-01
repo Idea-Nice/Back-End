@@ -42,7 +42,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String userId = customUserDetailsDTO.getUsername();
 
-        String token = jwtUtil.createJWT(userId, 3600000);
+        String token = jwtUtil.createJWT(userId, 60 * 60 * 60L);
 
         res.addHeader("Authorization", "Bearer " + token);
 
