@@ -57,11 +57,11 @@ public class AsmrController {
         }
     }
 
-    @GetMapping("/player") //1음원 저장 테스트로 임시작성
-    public String getAudioPlayerPage(Model model, @RequestParam(value = "id", required = false, defaultValue = "1") Long id) {
-        model.addAttribute("fileId", id);
-        return "audioTest";
-    }
+//    @GetMapping("/player") //1음원 저장 테스트로 임시작성
+//    public String getAudioPlayerPage(Model model, @RequestParam(value = "id", required = false, defaultValue = "1") Long id) {
+//        model.addAttribute("fileId", id);
+//        return "audioTest";
+//    }
 
     // 해당 유저가 사용 가능한 asmr 목록 조회
     @GetMapping("/user/{userId}/files")

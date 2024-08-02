@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -72,7 +73,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "background_id")
     )
-    private List<Background> backgrounds;
+    private List<Background> backgrounds = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(

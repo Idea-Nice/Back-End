@@ -8,7 +8,9 @@ import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -46,5 +48,12 @@ public class CharacterService {
             user.getCharacters().add(character);
             userRepository.save(user);
         }
+    }
+
+    public void saveCharacter(String name, MultipartFile image) throws IOException {
+        Character character = new Character();
+        character.setName(name);
+        character.setImage(image.getBytes());
+        characterRepository.save(character);
     }
 }
