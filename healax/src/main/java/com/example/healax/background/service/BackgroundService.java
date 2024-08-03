@@ -67,12 +67,10 @@ public class BackgroundService {
     public void grantBackgroundAccessByLevel(User user) {
         int level = user.getLevel();
 
-        for (long backgroundIdToAdd = 1; backgroundIdToAdd <= 6; backgroundIdToAdd++) {
-            if (level >= (backgroundIdToAdd - 1) * 3 + 1) {
-                Optional<Background> backgroundOptional = backgroundRepository.findById(backgroundIdToAdd);
-                if (backgroundOptional.isPresent() && !user.getBackgrounds().contains(backgroundOptional.get())) {
-                    user.getBackgrounds().add(backgroundOptional.get());
-                }
+        for (long backgroundIdToAdd = 1; backgroundIdToAdd <= (level / 3); backgroundIdToAdd++) {
+            Optional<Background> backgroundOptional = backgroundRepository.findById(backgroundIdToAdd);
+            if (backgroundOptional.isPresent() && !user.getBackgrounds().contains(backgroundOptional.get())) {
+                user.getBackgrounds().add(backgroundOptional.get());
             }
         }
         userRepository.save(user);

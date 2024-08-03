@@ -4,6 +4,8 @@ import com.example.healax.asmr.repository.AsmrRepository;
 import com.example.healax.asmr.repository.UserAsmrRepository;
 import com.example.healax.asmr.service.AsmrService;
 import com.example.healax.background.dto.UserBackgroundDTO;
+import com.example.healax.background.entity.Background;
+import com.example.healax.background.repository.BackgroundRepository;
 import com.example.healax.background.service.BackgroundService;
 import com.example.healax.character.dto.UserCharacterDTO;
 import com.example.healax.character.service.CharacterService;
@@ -26,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    private final BackgroundRepository backgroundRepository;
 //    private final UserLevelService userLevelService;
 
     private final Set<String> loggedInUsers = ConcurrentHashMap.newKeySet();
@@ -68,6 +70,10 @@ public class UserService {
             backgroundService.addBackgroundToUser(new UserBackgroundDTO(savedUser.getUserId(), 1L));
             characterService.addCharacterToUser(new UserCharacterDTO(savedUser.getUserId(), 1L));
 
+            // 기본 배경화면 설정
+            Optional<Background> defaultBackground = backgroundRepository.findById(1L);
+            defaultBackground.ifPresent(user::setCurrentBackground);
+
         } catch (DataIntegrityViolationException e) {
             System.out.println("중복되는 id 입니다. 다른 id를 입력해주세요. 예외 내용 : " + e);
             throw e; // 예외를 다시 던져서 트랜잭션 롤백을 유도합니다.
@@ -91,22 +97,12 @@ public class UserService {
     public UserDTO isLogin(UserDTO userDTO) {
         Optional<User> userRepositoryByUserId = userRepository.findByUserId(userDTO.getUserId());
 
-        System.out.println("userRepositoryByUserId: " + userRepositoryByUserId);
-
         if(userRepositoryByUserId.isPresent()) {
             User userEntity = userRepositoryByUserId.get();
 
-            System.out.println("userEntity: " + userEntity);
-
             if(userEntity.getUserPw().equals(userDTO.getUserPw())) {
                 UserDTO userLoginDTO = UserDTO.toSaveUserEntityDTO(userEntity);
-
                 loginUser(userEntity.getUserId());
-
-                System.out.println("userEntity.getId()" + userEntity.getId());
-
-//                userLevelService.updateLastLoginTime(userEntity.getId());
-
                 return userLoginDTO;
             } else {
                 return null;
@@ -133,6 +129,38 @@ public class UserService {
         } //else {
 ////            throw new UsernameNotFoundException("해당 아이디의 유저를 찾을 수 없습니다." + userDTO.getUserId());
 //        }
+    }
+
+    // 특정 유저 배경화면 설정하기
+    @Transactional
+    public void setCurrentBackground(String userId, Long backgroundId) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        Optional<Background> backgroundOptional = backgroundRepository.findById(backgroundId);
+
+        if(userOptional.isPresent() && backgroundOptional.isPresent()) {
+            User user = userOptional.get();
+            Background background = backgroundOptional.get();
+
+            if(user.getBackgrounds().contains(background)) {
+                user.setCurrentBackground(background);
+                userRepository.save(user);
+            } else {
+                throw new IllegalArgumentException("해당 배경화면에 대한 접근 권한이 없습니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("유저 또는 배경화면을 찾을 수 없습니다.");
+        }
+    }
+
+    // 특정 유저의 현재 설정된 배경화면 불러오기
+    public Background getCurrentBackground(String userId) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getCurrentBackground();
+        } else {
+            throw new IllegalArgumentException("해당 유저를 찾을 수 없습니다.");
+        }
     }
 
     public void loginUser(String userId) {

@@ -1,5 +1,7 @@
 package com.example.healax.user.controller;
 
+import com.example.healax.background.dto.BackgroundDTO;
+import com.example.healax.background.entity.Background;
 import com.example.healax.user.service.UserService;
 import com.example.healax.config.CommonResponse;
 import com.example.healax.user.dto.UserDTO;
@@ -8,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Base64;
 
 @Controller
 @RequiredArgsConstructor
@@ -69,6 +73,67 @@ public class UserController {
         } else {
             res = new CommonResponse(400, HttpStatus.BAD_REQUEST, "아이디와 비밀번호가 틀립니다", null);
             return new ResponseEntity<>(res, res.getHttpStatus());
+        }
+    }
+
+    // 사용자 배경화면 설정하기
+    @PostMapping("/user/set-background")
+    public ResponseEntity<CommonResponse> setCurrentBackground(@RequestBody SetCurrentBackgroundRequest request) {
+        try {
+            userService.setCurrentBackground(request.getUserId(), request.getBackgroundId());
+            CommonResponse res = new CommonResponse(200,HttpStatus.OK, "현재 배경화면 설정 성공", null);
+            return new ResponseEntity<>(res, res.getHttpStatus());
+        } catch (IllegalArgumentException e) {
+            CommonResponse res = new CommonResponse(404, HttpStatus.NOT_FOUND, e.getMessage(), null);
+            return new ResponseEntity<>(res, res.getHttpStatus());
+        } catch (Exception e) {
+            CommonResponse res = new CommonResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.", null);
+            return new ResponseEntity<>(res, res.getHttpStatus());
+        }
+    }
+
+    // 특정 사용자의 현재 설정된 배경화면 반환
+    @GetMapping("/user/get-background/{userId}")
+    public ResponseEntity<CommonResponse> getCurrentBackground(@PathVariable String userId) {
+        try {
+            Background currentBackground = userService.getCurrentBackground(userId);
+            if (currentBackground != null) {
+                String imageBase64 = Base64.getEncoder().encodeToString(currentBackground.getImage());
+                BackgroundDTO backgroundDTO = new BackgroundDTO(currentBackground.getId(), currentBackground.getName(), imageBase64);
+                CommonResponse res = new CommonResponse(200, HttpStatus.OK, "현재 배경화면 가져오기 성공", backgroundDTO);
+                return new ResponseEntity<>(res, res.getHttpStatus());
+            } else{
+                CommonResponse res = new CommonResponse(404, HttpStatus.NOT_FOUND, "설정되어있는 배경화면이 없습니다.", null);
+                return new ResponseEntity<>(res, res.getHttpStatus());
+            }
+        } catch (IllegalArgumentException e) {
+            CommonResponse res = new CommonResponse(404, HttpStatus.NOT_FOUND, e.getMessage(), null);
+            return new ResponseEntity<>(res, res.getHttpStatus());
+        } catch (Exception e) {
+            CommonResponse res = new CommonResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.", null);
+            return new ResponseEntity<>(res, res.getHttpStatus());
+        }
+    }
+
+    // 현재배경화면 설정을 위한 요청 리퀘스트바디 DTO
+    public static class SetCurrentBackgroundRequest {
+        private String userId;
+        private Long backgroundId;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
+
+        public Long getBackgroundId() {
+            return backgroundId;
+        }
+
+        public void setBackgroundId(Long backgroundId) {
+            this.backgroundId = backgroundId;
         }
     }
 

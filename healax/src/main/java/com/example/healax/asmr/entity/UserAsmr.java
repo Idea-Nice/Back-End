@@ -15,11 +15,11 @@ public class UserAsmr {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name= "user_id")
+    @JoinColumn(name= "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "asmr_audio_file_id")
+    @JoinColumn(name = "asmr_audio_file_id", nullable = false)
     private Asmr asmr;
 
 }

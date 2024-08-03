@@ -27,8 +27,6 @@ public class AsmrController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadAsmrAudioFile(@RequestParam("file") MultipartFile file) {
         try {
-            System.out.println("파일 이름 : " + file.getOriginalFilename());
-            System.out.println("파일 타입 : " + file.getContentType());
             Asmr asmr = asmrService.saveFile(file);
             return ResponseEntity.ok("ASMR 음원파일이 성공적으로 업로드되었습니다. : " + asmr.getId());
         } catch (IOException e) {
@@ -56,12 +54,6 @@ public class AsmrController {
             return ResponseEntity.status(404).body(null);
         }
     }
-
-//    @GetMapping("/player") //1음원 저장 테스트로 임시작성
-//    public String getAudioPlayerPage(Model model, @RequestParam(value = "id", required = false, defaultValue = "1") Long id) {
-//        model.addAttribute("fileId", id);
-//        return "audioTest";
-//    }
 
     // 해당 유저가 사용 가능한 asmr 목록 조회
     @GetMapping("/user/{userId}/files")

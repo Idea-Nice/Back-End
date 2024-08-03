@@ -47,9 +47,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserAsmr> userAsmrs;
 
-    @Column
-    private String profileMusic;
-
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers;
 
@@ -74,6 +71,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "background_id")
     )
     private List<Background> backgrounds = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "current_background_id")
+    private Background currentBackground;
 
     @ManyToMany
     @JoinTable(

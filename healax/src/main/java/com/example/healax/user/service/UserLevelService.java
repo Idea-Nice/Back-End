@@ -4,6 +4,7 @@ import com.example.healax.asmr.entity.Asmr;
 import com.example.healax.asmr.entity.UserAsmr;
 import com.example.healax.asmr.repository.AsmrRepository;
 import com.example.healax.asmr.repository.UserAsmrRepository;
+import com.example.healax.background.service.BackgroundService;
 import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class UserLevelService {
     private final UserRepository userRepository;
     private final UserAsmrRepository userAsmrRepository;
     private final AsmrRepository asmrRepository;
+    private final BackgroundService backgroundService;
 
     //회원 레벨 가져오기
     public Integer getLevel(String user_Id) {
@@ -52,6 +54,7 @@ public class UserLevelService {
                 user.setExp(user.getExp() - 45);
                 user.setLevel(user.getLevel() + 1);
                 grantAccessToNewAsmrs(user);
+                backgroundService.grantBackgroundAccessByLevel(user);
             }
             userRepository.save(user);
         }
@@ -59,54 +62,56 @@ public class UserLevelService {
 
     // 새 ASMR 접근 권한 부여 로직
     private void grantAccessToNewAsmrs(User user) {
-        int newLevel = user.getLevel();
-
-        if(newLevel == 1) {
-            unlockAsmrForUser(user, 1L);
-        }
-
-        // 3, 5, 7, 9, 11, 13, 15레벨에 asmr 음원 잠금 해제
-        if(newLevel >= 3 && newLevel % 2 == 1 && newLevel <= 15) {
-            long asmrId = (newLevel / 2) + 1;
-            unlockAsmrForUser(user, asmrId);
+        int userLevel = user.getLevel();
+        for (int i = 1; i <= (userLevel + 1) / 2; i++) {
+            unlockAsmrForUser(user, (long) i);
         }
     }
 
     private void unlockAsmrForUser(User user, Long asmrId) {
         Optional<Asmr> asmr = asmrRepository.findById(asmrId);
 
-        if(asmr.isPresent()) {
+        if (asmr.isPresent()) {
             boolean alreadyUnlocked = user.getUserAsmrs().stream()
                     .anyMatch(userAsmr -> userAsmr.getAsmr().getId().equals(asmrId));
 
-            if(!alreadyUnlocked) {
+            if (!alreadyUnlocked) {
                 UserAsmr userAsmr = new UserAsmr();
-
                 userAsmr.setUser(user);
                 userAsmr.setAsmr(asmr.get());
+
+                // 디버깅 메시지 출력
+                System.out.println("Unlocking ASMR for User: " + user.getUserId() + " ASMR ID: " + asmrId);
+
                 userAsmrRepository.save(userAsmr);
             }
         }
     }
 
-//    public void updateLastLoginTime(Long user_Id) {
-//        Optional<User> userOptional = userRepository.findById(user_Id);
-//        if (userOptional.isPresent()) {
-//            User user = userOptional.get();
-//
-//            user.setLastLoginTime(LocalDateTime.now());
-//
-//            userRepository.save(user);
-//        }
-//    }
+    // 현재 레벨 상태를 확인하고 접근권한 알맞게 갱신하는 메서드
+    @Transactional
+    public void refreshAccess(String userId) {
+        Optional<User> userEntity = userRepository.findByUserId(userId);
+        if (userEntity.isPresent()) {
+            User user = userEntity.get();
+            grantAccessToNewAsmrs(user);
+            backgroundService.grantBackgroundAccessByLevel(user);
+        } else {
+            throw new IllegalArgumentException("해당 유저를 찾을 수 없습니다. userId : " + userId);
+        }
+    }
 
-//    // EXP를 추가해야 하는지 확인하는 메서드
-//    public boolean shouldAddXp(User user) {
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime lastLoginTime = user.getLastLoginTime();
-//        // 마지막 로그인 시간이 1분 이상 경과했는지 확인
-//        return lastLoginTime != null && lastLoginTime.plusMinutes(1).isBefore(now);
-//    }
-
-
+    // 사용자 레벨 임의조정 + 권한갱신까지 한번에
+    @Transactional
+    public void adjustUserLevel(String userId, int newLevel) {
+        Optional<User> userEntity = userRepository.findByUserId(userId);
+        if (userEntity.isPresent()) {
+            User user = userEntity.get();
+            user.setLevel(newLevel);
+            userRepository.save(user);
+            refreshAccess(userId);
+        } else {
+            throw new IllegalArgumentException("유저를 찾을 수 없습니다. userId : " + userId);
+        }
+    }
 }
