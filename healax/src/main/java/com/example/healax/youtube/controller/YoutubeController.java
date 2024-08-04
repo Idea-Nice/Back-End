@@ -25,6 +25,11 @@ public class YoutubeController {
         return youtubeService.searchTop20Videos("lofi");
     }
 
+    @GetMapping("/pianoTop20")
+    public List<JsonNode> getTop20pianoVideos() throws IOException {
+        return youtubeService.searchTop20Videos("piano 1 hour");
+    }
+
     // 시청 기록 저장하기
     @PostMapping("/saveVideoHistory")
     public void saveVideoHistory(@RequestParam String userId, @RequestParam String videoUrl) throws IOException {
