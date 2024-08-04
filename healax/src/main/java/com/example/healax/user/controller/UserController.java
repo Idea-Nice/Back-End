@@ -2,6 +2,8 @@ package com.example.healax.user.controller;
 
 import com.example.healax.background.dto.BackgroundDTO;
 import com.example.healax.background.entity.Background;
+import com.example.healax.sticker.dto.StickerDTO;
+import com.example.healax.sticker.entity.Sticker;
 import com.example.healax.user.dto.CheckId;
 import com.example.healax.user.service.UserService;
 import com.example.healax.config.CommonResponse;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -162,4 +166,7 @@ public class UserController {
         );
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
+
+
+
 }

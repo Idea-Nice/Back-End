@@ -21,6 +21,7 @@ import java.util.Locale;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
 public class BackgroundController {
 
     private final BackgroundService backgroundService;

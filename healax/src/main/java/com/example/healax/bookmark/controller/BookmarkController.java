@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bookmark")
+@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
 public class BookmarkController {
 
     @Autowired

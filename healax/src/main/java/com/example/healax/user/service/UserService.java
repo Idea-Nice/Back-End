@@ -13,8 +13,6 @@ import com.example.healax.user.dto.UserDTO;
 import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,31 +27,24 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BackgroundRepository backgroundRepository;
-//    private final UserLevelService userLevelService;
-
-    private final Set<String> loggedInUsers = ConcurrentHashMap.newKeySet();
-
     private final AsmrService asmrService;
     private final BackgroundService backgroundService;
     private final CharacterService characterService;
+    private final Set<String> loggedInUsers = ConcurrentHashMap.newKeySet();
 
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    //아이디 중복 확인
+    // 아이디 중복 확인
     public String idCheck(String userId) {
         Optional<User> userRepositoryByUserId = userRepository.findByUserId(userId);
 
         if (userRepositoryByUserId.isPresent()) {
-
             User userEntity = userRepositoryByUserId.get();
-
             return userEntity.getUserId();
         } else {
             return null;
         }
     }
 
-    //유저 회원가입
+    // 유저 회원가입
     @Transactional
     public void save(UserDTO userDTO) {
         try {
@@ -64,7 +55,7 @@ public class UserService {
             User savedUser = userRepository.save(user);
 
             // 기본 ASMR 접근 권한 부여하기
-            asmrService.grantAccessToAsmr(savedUser.getUserId(), 1L); // 기본 asmr id 1 접근권한 부여
+            asmrService.grantAccessToAsmr(savedUser.getUserId(), 1L);
 
             // 기본 배경화면 접근 권한 부여하기
             backgroundService.addBackgroundToUser(new UserBackgroundDTO(savedUser.getUserId(), 1L));
@@ -83,24 +74,22 @@ public class UserService {
         }
     }
 
-    //유저 삭제
+    // 유저 삭제
     public void delete(String user_Id) {
         Optional<User> userEntity = userRepository.findByUserId(user_Id);
         if (userEntity.isPresent()) {
             userRepository.delete(userEntity.get());
-        } //else {
-////            throw new UsernameNotFoundException("유저를 찾을 수 없습니다" + userId);
-//        }
+        }
     }
 
-    //로그인
+    // 로그인
     public UserDTO isLogin(UserDTO userDTO) {
         Optional<User> userRepositoryByUserId = userRepository.findByUserId(userDTO.getUserId());
 
-        if(userRepositoryByUserId.isPresent()) {
+        if (userRepositoryByUserId.isPresent()) {
             User userEntity = userRepositoryByUserId.get();
 
-            if(userEntity.getUserPw().equals(userDTO.getUserPw())) {
+            if (userEntity.getUserPw().equals(userDTO.getUserPw())) {
                 UserDTO userLoginDTO = UserDTO.toSaveUserEntityDTO(userEntity);
                 loginUser(userEntity.getUserId());
                 return userLoginDTO;
@@ -112,7 +101,7 @@ public class UserService {
         }
     }
 
-    //유저 정보 수정하기
+    // 유저 정보 수정하기
     public void userUpdate(String userId, String userPw, String userName) {
         Optional<User> userEntityOptional = userRepository.findByUserId(userId);
 
@@ -126,9 +115,7 @@ public class UserService {
                 userEntity.setUserName(userName);
             }
             userRepository.save(userEntity);
-        } //else {
-////            throw new UsernameNotFoundException("해당 아이디의 유저를 찾을 수 없습니다." + userDTO.getUserId());
-//        }
+        }
     }
 
     // 특정 유저 배경화면 설정하기
@@ -137,11 +124,11 @@ public class UserService {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         Optional<Background> backgroundOptional = backgroundRepository.findById(backgroundId);
 
-        if(userOptional.isPresent() && backgroundOptional.isPresent()) {
+        if (userOptional.isPresent() && backgroundOptional.isPresent()) {
             User user = userOptional.get();
             Background background = backgroundOptional.get();
 
-            if(user.getBackgrounds().contains(background)) {
+            if (user.getBackgrounds().contains(background)) {
                 user.setCurrentBackground(background);
                 userRepository.save(user);
             } else {
@@ -163,11 +150,12 @@ public class UserService {
         }
     }
 
+    // 로그인
     public void loginUser(String userId) {
         loggedInUsers.add(userId);
-//        userLevelService.updateLastLoginTime(user_Id);
     }
 
+    // 로그아웃
     public void logoutUser(String user_Id) {
         loggedInUsers.remove(user_Id);
     }
@@ -175,5 +163,4 @@ public class UserService {
     public Set<String> getLoggedInUsers() {
         return loggedInUsers;
     }
-
 }

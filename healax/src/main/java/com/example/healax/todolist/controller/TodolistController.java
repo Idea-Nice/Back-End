@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/todo")
+@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
 public class TodolistController {
 
     private final TodolistService todolistService;

@@ -5,6 +5,7 @@ import com.example.healax.asmr.entity.UserAsmr;
 import com.example.healax.asmr.repository.AsmrRepository;
 import com.example.healax.asmr.repository.UserAsmrRepository;
 import com.example.healax.background.service.BackgroundService;
+import com.example.healax.sticker.service.StickerService;
 import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.Getter;
@@ -13,10 +14,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,22 +26,22 @@ public class UserLevelService {
     private final UserAsmrRepository userAsmrRepository;
     private final AsmrRepository asmrRepository;
     private final BackgroundService backgroundService;
+    private final StickerService stickerService;
 
-    //회원 레벨 가져오기
+    // 회원 레벨 가져오기
     public Integer getLevel(String user_Id) {
         Optional<User> userEntity = userRepository.findByUserId(user_Id);
 
         if (userEntity.isPresent()) {
             User user = userEntity.get();
-            Integer userLevel = user.getLevel();
-            return userLevel;
+            return user.getLevel();
         } else {
             return null;
         }
     }
 
     @Transactional
-    //회원 경험치 추가 로직
+    // 회원 경험치 추가 로직
     public void addExp(String userId) {
         Optional<User> userEntity = userRepository.findByUserId(userId);
         if (userEntity.isPresent()) {
@@ -55,6 +53,7 @@ public class UserLevelService {
                 user.setLevel(user.getLevel() + 1);
                 grantAccessToNewAsmrs(user);
                 backgroundService.grantBackgroundAccessByLevel(user);
+                stickerService.grantStickerAccessByLevel(user);
             }
             userRepository.save(user);
         }
@@ -88,7 +87,7 @@ public class UserLevelService {
         }
     }
 
-    // 현재 레벨 상태를 확인하고 접근권한 알맞게 갱신하는 메서드
+    // 현재 레벨 상태를 확인하고 접근 권한을 알맞게 갱신하는 메서드
     @Transactional
     public void refreshAccess(String userId) {
         Optional<User> userEntity = userRepository.findByUserId(userId);
@@ -96,12 +95,13 @@ public class UserLevelService {
             User user = userEntity.get();
             grantAccessToNewAsmrs(user);
             backgroundService.grantBackgroundAccessByLevel(user);
+            stickerService.grantStickerAccessByLevel(user);
         } else {
             throw new IllegalArgumentException("해당 유저를 찾을 수 없습니다. userId : " + userId);
         }
     }
 
-    // 사용자 레벨 임의조정 + 권한갱신까지 한번에
+    // 사용자 레벨 임의 조정 + 권한 갱신까지 한번에
     @Transactional
     public void adjustUserLevel(String userId, int newLevel) {
         Optional<User> userEntity = userRepository.findByUserId(userId);

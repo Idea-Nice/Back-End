@@ -4,6 +4,7 @@ import com.example.healax.asmr.entity.UserAsmr;
 import com.example.healax.background.entity.Background;
 import com.example.healax.bookmark.entity.Bookmark;
 import com.example.healax.character.entity.Character;
+import com.example.healax.sticker.entity.Sticker;
 import com.example.healax.user.dto.UserDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -87,4 +88,19 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bookmark> bookmarks;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_sticker",
+            inverseJoinColumns = @JoinColumn(name = "sticker_id")
+    )
+    private List<Sticker> stickers = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "current_user_sticker",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "sticker_id")
+    )
+    private List<Sticker> currentStickers = new ArrayList<>();
 }

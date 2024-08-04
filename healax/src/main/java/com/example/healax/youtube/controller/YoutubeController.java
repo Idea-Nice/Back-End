@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/youtube")
+@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
 public class YoutubeController {
 
     @Autowired

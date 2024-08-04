@@ -12,6 +12,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/bell")
+@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
 public class BellController {
 
     private final BellService bellService;
