@@ -2,6 +2,7 @@ package com.example.healax.user.controller;
 
 import com.example.healax.background.dto.BackgroundDTO;
 import com.example.healax.background.entity.Background;
+import com.example.healax.user.dto.CheckId;
 import com.example.healax.user.service.UserService;
 import com.example.healax.config.CommonResponse;
 import com.example.healax.user.dto.UserDTO;
@@ -15,6 +16,7 @@ import java.util.Base64;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
 public class UserController {
 
     private final UserService userService;
@@ -39,10 +41,9 @@ public class UserController {
 
     //회원ID 중복 확인
     @PostMapping("/idCheck")
-    public ResponseEntity<CommonResponse> idCheck(@RequestParam String userId) {
-        String idCheckResult = userService.idCheck(userId);
+    public ResponseEntity<CommonResponse> idCheck(@RequestBody CheckId checkId) {
+        String idCheckResult = userService.idCheck(checkId.getUserId());
 
-        System.out.println("idCheck + " + idCheckResult);
         CommonResponse res;
         if (idCheckResult != null) {
 
