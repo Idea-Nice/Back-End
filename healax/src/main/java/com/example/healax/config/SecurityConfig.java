@@ -74,7 +74,7 @@ public class SecurityConfig {
                 .logout(logout -> logout.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/signup", "/idCheck", "/asmr/upload", "/logout").permitAll()
+                        .requestMatchers("/login", "/signup", "/idCheck", "/asmr/upload", "/logout", "/background-fileUpload", "/sticker/upload").permitAll()
                         .anyRequest().authenticated())
 
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)

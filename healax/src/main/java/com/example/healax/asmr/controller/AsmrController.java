@@ -56,6 +56,13 @@ public class AsmrController {
         }
     }
 
+    // 전체 ASMR 받아오기
+    @GetMapping("/files")
+    public ResponseEntity<List<Asmr>> getAllAsmrs() {
+        List<Asmr> asmrs = asmrService.getAllAsmrs();
+        return ResponseEntity.ok(asmrs);
+    }
+
     // 해당 유저가 사용 가능한 asmr 목록 조회
     @GetMapping("/user/{userId}/files")
     public ResponseEntity<List<Asmr>> getAsmrsByUser (@PathVariable String userId) {

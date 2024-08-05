@@ -43,6 +43,11 @@ public class AsmrService {
         return asmrRepository.findById(id);
     }
 
+    // 전체 ASMR 파일 목록 조회
+    public List<Asmr> getAllAsmrs() {
+        return asmrRepository.findAll();
+    }
+
     // 특정 유저 asmr 보유 목록 조회
     public List<Asmr> getAsmrByUser(String userId) {
         Optional<User> user = userRepository.findByUserId(userId);
