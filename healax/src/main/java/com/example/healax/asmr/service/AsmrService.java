@@ -32,6 +32,13 @@ public class AsmrService {
 
     // 새로운 오디오 저장
     public Asmr saveFile(MultipartFile file, MultipartFile image) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("오디오 파일이 null이거나 비어있습니다.");
+        }
+        if (image == null || image.isEmpty()) {
+            throw new IllegalArgumentException("이미지 파일이 null이거나 비어있습니다.");
+        }
+
         Asmr asmr = new Asmr();
         asmr.setFileName(file.getOriginalFilename());
         asmr.setData(file.getBytes());
@@ -50,8 +57,8 @@ public class AsmrService {
         List<Asmr> asmrs = asmrRepository.findAll();
 
         List<AsmrDTO> asmrDTOs = asmrs.stream().map(asmr -> {
-            String musicBase64 = Base64.getEncoder().encodeToString(asmr.getData());
-            String imageBase64 = Base64.getEncoder().encodeToString(asmr.getImage());
+            String musicBase64 = asmr.getData() != null ? Base64.getEncoder().encodeToString(asmr.getData()) : null;
+            String imageBase64 = asmr.getImage() != null ? Base64.getEncoder().encodeToString(asmr.getImage()) : null;
             return new AsmrDTO(asmr.getId(), asmr.getFileName(), musicBase64, imageBase64);
         }).collect(Collectors.toList());
 

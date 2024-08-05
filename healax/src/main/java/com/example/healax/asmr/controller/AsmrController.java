@@ -29,6 +29,13 @@ public class AsmrController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadAsmrAudioFile(@RequestParam("file") MultipartFile file, @RequestParam("image") MultipartFile image) {
         try {
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest().body("오디오 파일이 null이거나 비어있습니다.");
+            }
+            if (image == null || image.isEmpty()) {
+                return ResponseEntity.badRequest().body("이미지 파일이 null이거나 비어있습니다.");
+            }
+
             Asmr asmr = asmrService.saveFile(file, image);
             return ResponseEntity.ok("ASMR 음원파일이 성공적으로 업로드되었습니다. : " + asmr.getId());
         } catch (IOException e) {
