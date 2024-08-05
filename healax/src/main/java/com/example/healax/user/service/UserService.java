@@ -14,6 +14,7 @@ import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,8 @@ public class UserService {
     private final CharacterService characterService;
     private final Set<String> loggedInUsers = ConcurrentHashMap.newKeySet();
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     // 아이디 중복 확인
     public String idCheck(String userId) {
         Optional<User> userRepositoryByUserId = userRepository.findByUserId(userId);
@@ -49,6 +52,7 @@ public class UserService {
     public void save(UserDTO userDTO) {
         try {
             User user = User.toSaveUserEntity(userDTO);
+            user.setUserPw(bCryptPasswordEncoder.encode(userDTO.getUserPw()));
             user.setLevel(1);
             user.setExp(0);
 
@@ -150,17 +154,19 @@ public class UserService {
         }
     }
 
-    // 로그인
     public void loginUser(String userId) {
         loggedInUsers.add(userId);
+        System.out.println("User logged in: " + userId);
+//        userLevelService.updateLastLoginTime(user_Id);
     }
 
-    // 로그아웃
-    public void logoutUser(String user_Id) {
-        loggedInUsers.remove(user_Id);
+    public void logoutUser(String userId) {
+        loggedInUsers.remove(userId);
+        System.out.println("User logged out: " + userId);
     }
 
     public Set<String> getLoggedInUsers() {
         return loggedInUsers;
     }
+
 }

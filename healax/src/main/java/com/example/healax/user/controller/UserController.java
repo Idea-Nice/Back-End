@@ -2,6 +2,7 @@ package com.example.healax.user.controller;
 
 import com.example.healax.background.dto.BackgroundDTO;
 import com.example.healax.background.entity.Background;
+import com.example.healax.config.LoginResponse;
 import com.example.healax.sticker.dto.StickerDTO;
 import com.example.healax.sticker.entity.Sticker;
 import com.example.healax.user.dto.CheckId;
@@ -69,19 +70,23 @@ public class UserController {
     }
 
     //로그인
+    //로그인
     @PostMapping("/login")
-    public ResponseEntity<Map> login(@RequestBody UserDTO userDTO) {
-        String userId = userDTO.getUserId();
+    public ResponseEntity<LoginResponse> login(@RequestBody UserDTO userDTO) {
+        System.out.println("userId1231" + userDTO.getUserId());
+        userService.loginUser(userDTO.getUserId());
         UserDTO loginResult = userService.isLogin(userDTO);
-        Map<String, String> response = new HashMap<>();
-        response.put("userId", userId);
 
+        LoginResponse res;
         if (loginResult != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            res = new LoginResponse(200, HttpStatus.OK, userDTO.getUserId() ,"로그인 성공", null);
+            return new ResponseEntity<>(res, res.getHttpStatus());
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            res = new LoginResponse(400, HttpStatus.BAD_REQUEST, userDTO.getUserId(),"아이디와 비밀번호가 틀립니다", null);
+            return new ResponseEntity<>(res, res.getHttpStatus());
         }
     }
+
 
     // 사용자 배경화면 설정하기
     @PostMapping("/user/set-background")
@@ -156,10 +161,11 @@ public class UserController {
         );
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
+
     //로그아웃
-    @PostMapping("/logout")
-    public ResponseEntity<CommonResponse> logout(@RequestBody String user_id){
-        userService.logoutUser(user_id);
+    @PostMapping("/logoutPost")
+    public ResponseEntity<CommonResponse> logout(@RequestParam String userId) {
+        userService.logoutUser(userId);
         CommonResponse res = new CommonResponse(
                 200,
                 HttpStatus.OK,
@@ -168,7 +174,5 @@ public class UserController {
         );
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
-
-
 
 }
