@@ -15,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -68,16 +70,16 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<CommonResponse> login(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<Map> login(@RequestBody UserDTO userDTO) {
+        String userId = userDTO.getUserId();
         UserDTO loginResult = userService.isLogin(userDTO);
+        Map<String, String> response = new HashMap<>();
+        response.put("userId", userId);
 
-        CommonResponse res;
         if (loginResult != null) {
-            res = new CommonResponse(200, HttpStatus.OK, "로그인 성공", null);
-            return new ResponseEntity<>(res, res.getHttpStatus());
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
-            res = new CommonResponse(400, HttpStatus.BAD_REQUEST, "아이디와 비밀번호가 틀립니다", null);
-            return new ResponseEntity<>(res, res.getHttpStatus());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
