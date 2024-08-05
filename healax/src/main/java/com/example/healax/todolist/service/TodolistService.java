@@ -63,21 +63,21 @@ public class TodolistService {
         }
     }
 
-    public Todolist updateTodolist(Todolist todolist, String userId, Long id) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public Todolist updateTodolist(TodolistDTO todolistDTO) {
+        Optional<User> user = userRepository.findByUserId(todolistDTO.getUserId());
         if (user.isPresent()) {
-            Optional<Todolist> existingTodolist = todolistRepository.findById(id);
+            Optional<Todolist> existingTodolist = todolistRepository.findById(todolistDTO.getId());
             if (existingTodolist.isPresent()) {
                 Todolist updateTodo = existingTodolist.get();
-                updateTodo.setTitle(todolist.getTitle());
-                updateTodo.setCompleted(todolist.isCompleted());
+                updateTodo.setTitle(todolistDTO.getTitle());
+                updateTodo.setCompleted(todolistDTO.isCompleted());
                 updateTodo.setUser(user.get());
                 return todolistRepository.save(updateTodo);
             } else {
-                throw new IllegalArgumentException("todolist 수정 오류 : 해당 투두리스트를 찾을 수 없습니다. id : " + id);
+                throw new IllegalArgumentException("todolist 수정 오류 : 해당 투두리스트를 찾을 수 없습니다. id : " + todolistDTO.getId());
             }
         } else {
-            throw new IllegalArgumentException("todolist 수정 오류 : 해당 유저 id를 찾을 수 없습니다. userId : " + userId);
+            throw new IllegalArgumentException("todolist 수정 오류 : 해당 유저 id를 찾을 수 없습니다. userId : " + todolistDTO.getUserId());
         }
     }
     public void deleteTodolistById(Long id) {

@@ -52,9 +52,9 @@ public class TodolistController {
     }
 
     // todolist 수정. (todolist id와 userId로 수정)
-    @PostMapping("/modify/{userId}/{id}")
-    public ResponseEntity<Todolist> updateTodolist(@RequestBody Todolist todolist, @PathVariable String userId, @PathVariable Long id) {
-        Todolist updateTodo = todolistService.updateTodolist(todolist, userId, id);
+    @PostMapping("/modify")
+    public ResponseEntity<Todolist> updateTodolist(@RequestBody TodolistDTO todolistDTO) {
+        Todolist updateTodo = todolistService.updateTodolist(todolistDTO);
         return ResponseEntity.ok(updateTodo);
     }
 
