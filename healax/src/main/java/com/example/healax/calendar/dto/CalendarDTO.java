@@ -15,7 +15,6 @@ public class CalendarDTO {
 
     private Long id;
     private String title;
-    private String content;
     private LocalDateTime startday;
     private LocalDateTime endday;
 }

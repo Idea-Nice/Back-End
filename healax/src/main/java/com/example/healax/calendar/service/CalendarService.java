@@ -27,7 +27,6 @@ public class CalendarService {
             Calendar calendar = new Calendar();
             calendar.setUser(userOptional.get());
             calendar.setTitle(calendarDTO.getTitle());
-            calendar.setContent(calendarDTO.getContent());
             calendar.setStartday(calendarDTO.getStartday());
             calendar.setEndday(calendarDTO.getEndday());
             calendarRepository.save(calendar);
@@ -43,7 +42,6 @@ public class CalendarService {
                 Calendar calendar = calendarOptional.get();
                 if (calendar.getUser().getUserId().equals(userId)) {
                     calendar.setTitle(calendarDTO.getTitle());
-                    calendar.setContent(calendarDTO.getContent());
                     calendar.setStartday(calendarDTO.getStartday());
                     calendar.setEndday(calendarDTO.getEndday());
                     calendarRepository.save(calendar);
@@ -64,7 +62,7 @@ public class CalendarService {
     // 해당 유저 캘린더 리스트 가져오기
     public List<CalendarDTO> getCalendarList(String user_id) {
         return calendarRepository.findByUser_userId(user_id).stream()
-                .map(calender -> new CalendarDTO(calender.getId(), calender.getTitle(), calender.getContent(), calender.getStartday(), calender.getEndday()))
+                .map(calender -> new CalendarDTO(calender.getId(), calender.getTitle(), calender.getStartday(), calender.getEndday()))
                 .collect(Collectors.toList());
     }
 }

@@ -24,9 +24,6 @@ public class Calendar {
     @Column(nullable = false, length = 30)
     private String title;
 
-    @Column(nullable = false, length = 30)
-    private String content;
-
     @Column(nullable = false)
     private LocalDateTime startday;
 
