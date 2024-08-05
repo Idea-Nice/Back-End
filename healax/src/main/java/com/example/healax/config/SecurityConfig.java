@@ -77,7 +77,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/signup", "/idCheck", "/asmr/upload", "/logout").permitAll()
                         .anyRequest().authenticated())
 
-                .addFilterBefore(new JWTFilter(jwtUtil), JWTLoginFilter.class)
+                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
 
                 .addFilterAt(new JWTLoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, userService), UsernamePasswordAuthenticationFilter.class)
 
