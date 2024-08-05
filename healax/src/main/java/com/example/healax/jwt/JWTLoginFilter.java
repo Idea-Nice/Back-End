@@ -52,7 +52,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         res.setCharacterEncoding("UTF-8");
 
         try {
-            String jsonResponse = String.format("{\"code\": 200, \"httpStatus\": \"OK\", \"message\": \"로그인 성공\", \"data\": {\"token\": \"%s\"}}", token);
+            String jsonResponse = String.format("{\"code\": 200, \"httpStatus\": \"OK\", \"message\": \"로그인 성공\", \"data\": {\"userId\": \"%s\", \"token\": \"%s\"}}", userId, token);
             res.getWriter().write(jsonResponse);
         } catch (IOException e) {
             e.printStackTrace();

@@ -70,7 +70,6 @@ public class UserController {
     }
 
     //로그인
-    //로그인
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody UserDTO userDTO) {
         System.out.println("userId1231" + userDTO.getUserId());
