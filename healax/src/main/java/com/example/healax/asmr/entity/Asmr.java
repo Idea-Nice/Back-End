@@ -13,11 +13,12 @@ public class Asmr {
     @Column
     private String fileName;
 
-    private String fileType;
-    private Long filesize;
-
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] data;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] image;
 
 }

@@ -1,5 +1,6 @@
 package com.example.healax.asmr.controller;
 
+import com.example.healax.asmr.dto.AsmrDTO;
 import com.example.healax.asmr.entity.Asmr;
 import com.example.healax.asmr.service.AsmrService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class AsmrController {
 
     // 음원파일 업로드
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadAsmrAudioFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadAsmrAudioFile(@RequestParam("file") MultipartFile file, @RequestParam("image") MultipartFile image) {
         try {
-            Asmr asmr = asmrService.saveFile(file);
+            Asmr asmr = asmrService.saveFile(file, image);
             return ResponseEntity.ok("ASMR 음원파일이 성공적으로 업로드되었습니다. : " + asmr.getId());
         } catch (IOException e) {
             return ResponseEntity.status(500).body("ASMR 음원파일 업로드 실패 : " + e.getMessage());
@@ -58,8 +59,8 @@ public class AsmrController {
 
     // 전체 ASMR 받아오기
     @GetMapping("/files")
-    public ResponseEntity<List<Asmr>> getAllAsmrs() {
-        List<Asmr> asmrs = asmrService.getAllAsmrs();
+    public ResponseEntity<List<AsmrDTO>> getAllAsmrs() {
+        List<AsmrDTO> asmrs = asmrService.getAllAsmrs();
         return ResponseEntity.ok(asmrs);
     }
 

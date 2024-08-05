@@ -87,7 +87,7 @@ public class BackgroundController {
 
     // 이미지파일 db에 업로드하기
     @PostMapping("/background-fileUpload")
-    public ResponseEntity<CommonResponse> uploadBackground(@RequestParam("name") String name, @RequestParam("image")MultipartFile image) throws IOException {
+    public ResponseEntity<CommonResponse> uploadBackground(@RequestParam("name") String name, @RequestParam("image")MultipartFile image) throws IOException{
         backgroundService.saveBackground(name, image);
         CommonResponse res = new CommonResponse(
                 200,

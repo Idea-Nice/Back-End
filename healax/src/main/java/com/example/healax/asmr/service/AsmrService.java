@@ -1,9 +1,11 @@
 package com.example.healax.asmr.service;
 
+import com.example.healax.asmr.dto.AsmrDTO;
 import com.example.healax.asmr.entity.Asmr;
 import com.example.healax.asmr.entity.UserAsmr;
 import com.example.healax.asmr.repository.AsmrRepository;
 import com.example.healax.asmr.repository.UserAsmrRepository;
+import com.example.healax.sticker.dto.StickerDTO;
 import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,12 +31,11 @@ public class AsmrService {
     private UserRepository userRepository;
 
     // 새로운 오디오 저장
-    public Asmr saveFile(MultipartFile file) throws IOException {
+    public Asmr saveFile(MultipartFile file, MultipartFile image) throws IOException {
         Asmr asmr = new Asmr();
         asmr.setFileName(file.getOriginalFilename());
-        asmr.setFileType(file.getContentType());
-        asmr.setFilesize(file.getSize());
         asmr.setData(file.getBytes());
+        asmr.setImage(image.getBytes());
 
         return asmrRepository.save(asmr);
     }
@@ -44,8 +46,16 @@ public class AsmrService {
     }
 
     // 전체 ASMR 파일 목록 조회
-    public List<Asmr> getAllAsmrs() {
-        return asmrRepository.findAll();
+    public List<AsmrDTO> getAllAsmrs() {
+        List<Asmr> asmrs = asmrRepository.findAll();
+
+        List<AsmrDTO> asmrDTOs = asmrs.stream().map(asmr -> {
+            String musicBase64 = Base64.getEncoder().encodeToString(asmr.getData());
+            String imageBase64 = Base64.getEncoder().encodeToString(asmr.getImage());
+            return new AsmrDTO(asmr.getId(), asmr.getFileName(), musicBase64, imageBase64);
+        }).collect(Collectors.toList());
+
+        return asmrDTOs;
     }
 
     // 특정 유저 asmr 보유 목록 조회
