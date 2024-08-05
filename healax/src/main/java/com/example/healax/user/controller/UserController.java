@@ -6,6 +6,7 @@ import com.example.healax.config.LoginResponse;
 import com.example.healax.sticker.dto.StickerDTO;
 import com.example.healax.sticker.entity.Sticker;
 import com.example.healax.user.dto.CheckId;
+import com.example.healax.user.dto.SetCurrentBackgroundRequest;
 import com.example.healax.user.service.UserService;
 import com.example.healax.config.CommonResponse;
 import com.example.healax.user.dto.UserDTO;
@@ -123,28 +124,6 @@ public class UserController {
         } catch (Exception e) {
             CommonResponse res = new CommonResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.", null);
             return new ResponseEntity<>(res, res.getHttpStatus());
-        }
-    }
-
-    // 현재배경화면 설정을 위한 요청 리퀘스트바디 DTO
-    public static class SetCurrentBackgroundRequest {
-        private String userId;
-        private Long backgroundId;
-
-        public String getUserId() {
-            return userId;
-        }
-
-        public void setUserId(String userId) {
-            this.userId = userId;
-        }
-
-        public Long getBackgroundId() {
-            return backgroundId;
-        }
-
-        public void setBackgroundId(Long backgroundId) {
-            this.backgroundId = backgroundId;
         }
     }
 
