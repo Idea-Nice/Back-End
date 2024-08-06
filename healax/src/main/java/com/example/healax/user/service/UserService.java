@@ -14,7 +14,7 @@ import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +33,7 @@ public class UserService {
     private final CharacterService characterService;
     private final Set<String> loggedInUsers = ConcurrentHashMap.newKeySet();
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 아이디 중복 확인
     public String idCheck(String userId) {
@@ -52,7 +52,7 @@ public class UserService {
     public void save(UserDTO userDTO) {
         try {
             User user = User.toSaveUserEntity(userDTO);
-            user.setUserPw(bCryptPasswordEncoder.encode(userDTO.getUserPw()));
+            user.setUserPw(userDTO.getUserPw());
             user.setLevel(1);
             user.setExp(0);
 
