@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bookmark")
-@CrossOrigin(origins = "http://43.203.68.91:80/", allowedHeaders = "*")
 public class BookmarkController {
 
     @Autowired

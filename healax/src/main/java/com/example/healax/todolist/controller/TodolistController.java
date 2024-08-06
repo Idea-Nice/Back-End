@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/todo")
-@CrossOrigin(origins = "http://43.203.68.91:80/", allowedHeaders = "*")
 public class TodolistController {
 
     private final TodolistService todolistService;
