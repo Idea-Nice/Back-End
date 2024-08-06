@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/sticker")
-@CrossOrigin(origins = "http://43.203.68.91/", allowedHeaders = "*")
+@CrossOrigin(origins = "http://43.203.68.91:80/", allowedHeaders = "*")
 public class StickerController {
 
     private final StickerService stickerService;
