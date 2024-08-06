@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/asmr")
-@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
+@CrossOrigin(origins = "http://43.203.68.91/", allowedHeaders = "*")
 public class AsmrController {
 
     @Autowired

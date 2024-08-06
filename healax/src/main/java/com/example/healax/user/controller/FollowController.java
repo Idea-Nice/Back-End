@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "*")
+@CrossOrigin(origins = "http://43.203.68.91/", allowedHeaders = "*")
 public class FollowController {
     private final FollowService followService;
 

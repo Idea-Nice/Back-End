@@ -24,6 +24,10 @@ public class Sticker {
     @Column(columnDefinition = "LONGBLOB")
     private byte[] image;
 
+    // 좌표정보
+    private int left;
+    private int top;
+
     @ManyToOne
     @JoinColumn(name = "background_id")
     private Background background;

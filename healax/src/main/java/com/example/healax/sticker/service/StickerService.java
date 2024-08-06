@@ -31,7 +31,7 @@ public class StickerService {
         List<Sticker> stickers = stickerRepository.findByBackgroundId(backgroundId);
         return stickers.stream().map(sticker -> {
             String imageBase64 = Base64.getEncoder().encodeToString(sticker.getImage());
-            return new StickerDTO(sticker.getId(), sticker.getName(), imageBase64, sticker.getBackground().getId());
+            return new StickerDTO(sticker.getId(), sticker.getName(), imageBase64, sticker.getBackground().getId(),sticker.getLeft(), sticker.getTop());
         }).collect(Collectors.toList());
     }
 
@@ -67,7 +67,7 @@ public class StickerService {
     }
 
     @Transactional
-    public void saveSticker(String name, MultipartFile image, Long backgroundId) throws IOException {
+    public void saveSticker(String name, MultipartFile image, Long backgroundId, int left, int top) throws IOException {
         Optional<Background> backgroundOptional = backgroundRepository.findById(backgroundId);
 
         if (backgroundOptional.isPresent()) {
@@ -75,6 +75,8 @@ public class StickerService {
             sticker.setName(name);
             sticker.setImage(image.getBytes());
             sticker.setBackground(backgroundOptional.get());
+            sticker.setLeft(left);
+            sticker.setTop(top);
             stickerRepository.save(sticker);
         } else {
             throw new IllegalArgumentException("해당 배경화면을 찾을 수 없습니다.");
