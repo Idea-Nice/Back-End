@@ -27,7 +27,7 @@ public class AsmrController {
 
     // 음원파일 업로드
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadAsmrAudioFile(@RequestParam("file") MultipartFile file, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<String> uploadAsmrAudioFile(@RequestParam("file") MultipartFile file, @RequestParam("image") MultipartFile image, @RequestParam String fileName) {
         try {
             if (file == null || file.isEmpty()) {
                 return ResponseEntity.badRequest().body("오디오 파일이 null이거나 비어있습니다.");
@@ -35,8 +35,11 @@ public class AsmrController {
             if (image == null || image.isEmpty()) {
                 return ResponseEntity.badRequest().body("이미지 파일이 null이거나 비어있습니다.");
             }
+            if (fileName == null || fileName.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("파일 이름이 null이거나 비어있습니다.");
+            }
 
-            Asmr asmr = asmrService.saveFile(file, image);
+            Asmr asmr = asmrService.saveFile(file, image, fileName);
             return ResponseEntity.ok("ASMR 음원파일이 성공적으로 업로드되었습니다. : " + asmr.getId());
         } catch (IOException e) {
             return ResponseEntity.status(500).body("ASMR 음원파일 업로드 실패 : " + e.getMessage());
