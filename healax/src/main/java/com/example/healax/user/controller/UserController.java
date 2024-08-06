@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin()
 public class UserController {
 
     private final UserService userService;
