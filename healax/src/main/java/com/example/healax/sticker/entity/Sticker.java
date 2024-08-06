@@ -25,8 +25,8 @@ public class Sticker {
     private byte[] image;
 
     // 좌표정보
-    private int left;
-    private int top;
+    private int pos_left;
+    private int pos_top;
 
     @ManyToOne
     @JoinColumn(name = "background_id")

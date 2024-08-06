@@ -12,6 +12,6 @@ public class StickerDTO {
     private String name;
     private String imageBase64;
     private Long backgroundId;
-    private int left;
-    private int top;
+    private int pos_left;
+    private int pos_top;
 }

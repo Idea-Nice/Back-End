@@ -31,7 +31,7 @@ public class StickerService {
         List<Sticker> stickers = stickerRepository.findByBackgroundId(backgroundId);
         return stickers.stream().map(sticker -> {
             String imageBase64 = Base64.getEncoder().encodeToString(sticker.getImage());
-            return new StickerDTO(sticker.getId(), sticker.getName(), imageBase64, sticker.getBackground().getId(),sticker.getLeft(), sticker.getTop());
+            return new StickerDTO(sticker.getId(), sticker.getName(), imageBase64, sticker.getBackground().getId(),sticker.getPos_left(), sticker.getPos_top());
         }).collect(Collectors.toList());
     }
 
@@ -75,8 +75,8 @@ public class StickerService {
             sticker.setName(name);
             sticker.setImage(image.getBytes());
             sticker.setBackground(backgroundOptional.get());
-            sticker.setLeft(left);
-            sticker.setTop(top);
+            sticker.setPos_left(left);
+            sticker.setPos_top(top);
             stickerRepository.save(sticker);
         } else {
             throw new IllegalArgumentException("해당 배경화면을 찾을 수 없습니다.");

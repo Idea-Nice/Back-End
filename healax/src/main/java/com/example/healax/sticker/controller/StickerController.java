@@ -28,9 +28,9 @@ public class StickerController {
     public ResponseEntity<CommonResponse> uploadSticker(@RequestParam("name") String name,
                                                         @RequestParam("image") MultipartFile image,
                                                         @RequestParam("backgroundId") Long backgroundId,
-                                                        @RequestParam("left") int left,
-                                                        @RequestParam("top") int top) throws IOException {
-        stickerService.saveSticker(name, image, backgroundId, left, top);
+                                                        @RequestParam("pos_left") int pos_left,
+                                                        @RequestParam("pos_top") int pos_top) throws IOException {
+        stickerService.saveSticker(name, image, backgroundId, pos_left, pos_top);
         CommonResponse res = new CommonResponse(200, HttpStatus.OK, "스티커 업로드 성공", null);
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
@@ -60,7 +60,7 @@ public class StickerController {
             if (!currentStickers.isEmpty()) {
                 List<StickerDTO> stickerDTOs = currentStickers.stream().map(sticker -> {
                     String imageBase64 = Base64.getEncoder().encodeToString(sticker.getImage());
-                    return new StickerDTO(sticker.getId(), sticker.getName(), imageBase64, sticker.getBackground().getId(),sticker.getLeft(), sticker.getTop());
+                    return new StickerDTO(sticker.getId(), sticker.getName(), imageBase64, sticker.getBackground().getId(),sticker.getPos_left(), sticker.getPos_top());
                 }).collect(Collectors.toList());
                 CommonResponse res = new CommonResponse(200, HttpStatus.OK, "현재 스티커 가져오기 성공", stickerDTOs);
                 return new ResponseEntity<>(res, res.getHttpStatus());
