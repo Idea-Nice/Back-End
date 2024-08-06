@@ -58,5 +58,5 @@ tasks.named('test') {
 }
 
 bootJar {
-	mainClassName = 'com.example.healax.HealaxApplication'
+	mainClass.set('com.example.healax.HealaxApplication')
 }
