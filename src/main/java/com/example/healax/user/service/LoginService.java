@@ -22,7 +22,7 @@ public class LoginService {
         비밀번호가 같은지 확인
         존재하지 않거나 비밀번호가 틀리다면 예외 던짐 */
     public LoginDTO login(LoginDTO loginDTO) {
-        User user= userRepository.findByUserId(loginDTO.getUserId())
+        User user = userRepository.findByUserId(loginDTO.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다."));
 
         if(!user.getUserPw().equals(loginDTO.getUserPw())) {
@@ -30,6 +30,6 @@ public class LoginService {
         }
 
         // 위 조건에 안걸리고 성공적으로 pw가 맞아 떨어지면
-        return new LoginDTO(user.getUserId(), user.getUserPw(), user.getUserName());
+        return new LoginDTO(user.getUserId(), user.getUserPw());
     }
 }
