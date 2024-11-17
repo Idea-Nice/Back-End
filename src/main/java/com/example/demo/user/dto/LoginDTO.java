@@ -1,13 +1,14 @@
 package com.example.demo.user.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginDTO {
 
     private String userId;
 
     private String userPw;
 
-    private String userName;
 }

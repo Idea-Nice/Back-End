@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -16,26 +19,26 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/Signup")
-    public ResponseEntity<String> signup(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> signup(@RequestBody UserDTO userDTO) {
 
-        userService.save(userDTO);
+        try {
+            userService.save(userDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userDTO + " 회원가입 성공");
+            return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     // id 중복확인
     @PostMapping("/idCheck")
     public ResponseEntity<String> idCheck(@RequestParam String userId) {
 
-        String idCheck = userService.idCheck(userId);
+        Optional<String> idCheck = userService.idCheck(userId);
 
-        if (idCheck == null) {
-
-            return ResponseEntity.status(HttpStatus.OK).body(userId + "는 사용 가능한 아이디 입니다.");
-
-        }
-        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(idCheck + "는 중복된 아이디 입니다.");
-
+        return idCheck.map(s -> ResponseEntity.status(HttpStatus.CONFLICT).body(s + "는 중복된 아이디입니다.")).orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body(userId + "는 사용가능한 아이디 입니다."));
     }
 
     // 회원 정보 수정
@@ -46,11 +49,20 @@ public class UserController {
 
             userService.update(userDTO);
 
-            return ResponseEntity.status(HttpStatus.OK).body(userDTO + " 회원 정보 수정 성공");
+            return ResponseEntity.status(HttpStatus.OK).body("회원 정보 수정 성공");
 
-        } catch (RuntimeException e) {
+        } catch (NoSuchElementException e) {
+            // 유저를 찾을 수 없는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
+        } catch (IllegalArgumentException e) {
+            // 요청 데이터가 유효하지 않은 경우
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        } catch (Exception e) {
+            // 그 외 예상치 못한 서버 오류 발생 시
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 오류가 발생했습니다: " + e.getMessage());
         }
     }
 
@@ -59,15 +71,17 @@ public class UserController {
     public ResponseEntity<String> delete(@PathVariable String userId) {
 
         try {
-
             userService.delete(userId);
 
             return ResponseEntity.status(HttpStatus.OK).body(userId + " 회원 탈퇴 완료");
 
+        } catch (NoSuchElementException e) {
 
-        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생 : " + e.getMessage());
         }
     }
 

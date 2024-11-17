@@ -1,5 +1,7 @@
 package com.example.demo.user.controller;
 
+import com.example.demo.exception.InvalidCredentialsException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.user.dto.LoginDTO;
 import com.example.demo.user.service.LoginService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.file.AccessDeniedException;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,17 +29,23 @@ public class LoginController {
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-
         try {
 
             LoginDTO loginResult = loginService.login(loginDTO);
 
-            return ResponseEntity.status(HttpStatus.OK).body(loginResult + " 로그인 성공");
+            return ResponseEntity.status(HttpStatus.OK).body("로그인 성공 userId : " + loginResult.getUserId());
 
-        } catch (RuntimeException e) {
+        } catch (UserNotFoundException e) {
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
+        } catch (InvalidCredentialsException e) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다. : " + e.getMessage());
         }
     }
 
