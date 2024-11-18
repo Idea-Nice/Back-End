@@ -35,6 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### 인증 파일 ###
-src/main/resources/healax-568543d8db15.json
