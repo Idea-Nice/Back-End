@@ -2,13 +2,11 @@ package com.example.healax.user.service;
 
 import com.example.healax.user.domain.User;
 import com.example.healax.user.dto.LoginDTO;
-import com.example.healax.user.exception.InvalidCredentialsException;
-import com.example.healax.user.exception.UserNotFoundException;
+import com.example.healax.exception.InvalidCredentialsException;
+import com.example.healax.exception.UserNotFoundException;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

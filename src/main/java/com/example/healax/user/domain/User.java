@@ -32,14 +32,14 @@ public class User {
     private String userName;
 
     @ManyToOne
-    @JoinColumn(name = "current_background_id")
+    @JoinColumn(name = "current_background_id", foreignKey = @ForeignKey(name = "fk_user_background_user"))
     private Background currentBackground;
 
     @ManyToMany
     @JoinTable(
             name = "user_background",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "background_id")
+            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_background_user")),
+            inverseJoinColumns = @JoinColumn(name = "background_id", foreignKey = @ForeignKey(name = "fk_user_background_user"))
     )
     private Set<Background> ownedBackgrounds = new HashSet<>(); // 중복 생성이 방지되도록 List 대신 Set으로 담는다.
 

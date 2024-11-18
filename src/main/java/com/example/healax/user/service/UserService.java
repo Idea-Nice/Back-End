@@ -2,21 +2,13 @@ package com.example.healax.user.service;
 
 import com.example.healax.user.domain.User;
 import com.example.healax.user.dto.UserDTO;
+import com.example.healax.exception.UserNotFoundException;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.FluentQuery;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -48,19 +40,13 @@ public class UserService {
     회원 정보 수정
     해당 userId 찾아서 DB에 업데이트  */
     public void update(UserDTO userDTO) {
-        Optional<User> userOptional = userRepository.findByUserId(userDTO.getUserId());
-
-        // 유저가 없는 경우
-        if (userOptional.isEmpty()) {
-            throw new NoSuchElementException("유저를 찾을 수 없습니다.");
-        }
+        User user = userRepository.findByUserId(userDTO.getUserId())
+                .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다."));
 
         // 유효하지 않은 요청 데이터인 경우
         if (userDTO.getUserPw() == null && userDTO.getUserName() == null) {
             throw new IllegalArgumentException("요청 데이터에 유효한 정보가 없습니다.");
         }
-
-        User user = userOptional.get();
 
         // 필요한 데이터만 업데이트
         if (userDTO.getUserPw() != null) {

@@ -23,8 +23,9 @@ public class GcsBackgroundService implements StorageService{
     @Override
     public String uploadFile(MultipartFile file) throws IOException {
         String uniqueFileName = "background/" + UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+
         BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, uniqueFileName)
-                .setAcl(java.util.Collections.singletonList(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER)))
+                .setContentType(file.getContentType()) // 파일의 MIME 타입 설정 - 이미지 다운로드 x, 보여주기 o
                 .build();
 
         storage.create(blobInfo, file.getBytes());

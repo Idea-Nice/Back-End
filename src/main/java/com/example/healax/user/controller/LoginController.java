@@ -2,8 +2,6 @@ package com.example.healax.user.controller;
 
 
 import com.example.healax.user.dto.LoginDTO;
-import com.example.healax.user.exception.InvalidCredentialsException;
-import com.example.healax.user.exception.UserNotFoundException;
 import com.example.healax.user.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,16 +26,9 @@ public class LoginController {
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-        try {
-            LoginDTO loginResult = loginService.login(loginDTO);
-            return ResponseEntity.status(HttpStatus.OK).body("로그인 성공 : " + loginResult.getUserId());
 
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (InvalidCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다. : " + e.getMessage());
-        }
+        LoginDTO loginResult = loginService.login(loginDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("로그인 성공 : " + loginResult.getUserId());
+
     }
 }
