@@ -1,4 +1,4 @@
-package com.example.demo.todolist.dto;
+package com.example.healax.todolist.dto;
 
 import lombok.*;
 

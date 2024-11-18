@@ -1,6 +1,6 @@
-package com.example.demo.todolist.repository;
+package com.example.healax.todolist.repository;
 
-import com.example.demo.todolist.entity.Todo;
+import com.example.healax.todolist.domain.Todo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

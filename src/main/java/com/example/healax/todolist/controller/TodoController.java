@@ -1,11 +1,10 @@
-package com.example.demo.todolist.controller;
-
-import com.example.demo.exception.TodoNotFoundException;
-import com.example.demo.exception.UserNotFoundException;
-import com.example.demo.todolist.dto.TodoIdListDTO;
-import com.example.demo.todolist.dto.TodoListDTO;
-import com.example.demo.todolist.dto.TodoStatusDTO;
-import com.example.demo.todolist.service.TodoService;
+package com.example.healax.todolist.controller;
+import com.example.healax.exception.TodoNotFoundException;
+import com.example.healax.exception.UserNotFoundException;
+import com.example.healax.todolist.dto.TodoIdListDTO;
+import com.example.healax.todolist.dto.TodoListDTO;
+import com.example.healax.todolist.dto.TodoStatusDTO;
+import com.example.healax.todolist.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.example.demo.todolist.entity;
+package com.example.healax.todolist.domain;
 
-import com.example.demo.user.entity.User;
+import com.example.healax.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
