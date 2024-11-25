@@ -42,11 +42,11 @@ public class TodoController {
 
     // 투두리스트 추가
     @PostMapping()
-    public ResponseEntity<String> addTodoList(@RequestParam String userId, @RequestParam String todoTitle) {
+    public ResponseEntity<String> addTodoList(@RequestBody TodoListDTO todoListDTO) {
 
         try {
 
-            todoService.save(userId, todoTitle);
+            todoService.save(todoListDTO);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("투두리스트 추가 성공");
 
@@ -82,13 +82,13 @@ public class TodoController {
 
     // 투두리스트 수정
     @PutMapping()
-    public ResponseEntity<String> updateTodoList(@RequestParam Long id, @RequestParam String todoTitle) {
+    public ResponseEntity<String> updateTodoList(@RequestBody TodoListDTO todoListDTO) {
 
         try {
 
-            todoService.updateTodoList(id, todoTitle);
+            todoService.updateTodoList(todoListDTO);
 
-            return ResponseEntity.status(HttpStatus.OK).body("투두리스트 " + id + " 수정 성공");
+            return ResponseEntity.status(HttpStatus.OK).body("투두리스트 " + todoListDTO.getId() + " 수정 성공");
 
         } catch (TodoNotFoundException e) {
 

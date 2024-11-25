@@ -1,6 +1,7 @@
 package com.example.healax.user.controller;
 
 import com.example.healax.user.dto.UserDTO;
+import com.example.healax.user.entity.User;
 import com.example.healax.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,10 @@ public class UserController {
     public ResponseEntity<?> signup(@RequestBody UserDTO userDTO) {
 
         try {
-            userService.save(userDTO);
 
-            return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+            User saveResult = userService.save(userDTO);
+
+            return ResponseEntity.status(HttpStatus.OK).body(saveResult);
 
         } catch (Exception e) {
 

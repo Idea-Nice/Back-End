@@ -1,4 +1,4 @@
-package com.example.healax.user.dto;
+package com.example.healax.security.dto;
 
 import lombok.*;
 
@@ -10,5 +10,4 @@ public class LoginDTO {
     private String userId;
 
     private String userPw;
-
 }

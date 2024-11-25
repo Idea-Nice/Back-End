@@ -4,6 +4,7 @@ import com.example.healax.user.dto.UserDTO;
 import com.example.healax.user.entity.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -16,15 +17,22 @@ public class UserService {
     // UserRepository 의존성 주입
     private final UserRepository userRepository;
 
+    //사용자 비밀번호 암호화 하기 위한 수단
+    private final PasswordEncoder passwordEncoder;
+
     // 회원가입
-    public void save(UserDTO userDTO) {
+    public User save(UserDTO userDTO) {
+
         User user = new User();
 
         user.setUserId(userDTO.getUserId());
-        user.setUserPw(userDTO.getUserPw());
+        user.setUserPw(passwordEncoder.encode(userDTO.getUserPw()));
         user.setUserName(userDTO.getUserName());
+        user.setRoles("ROLE_USER");
 
         userRepository.save(user);
+
+        return user;
     }
 
     /*
@@ -57,7 +65,7 @@ public class UserService {
 
         // 필요한 데이터만 업데이트
         if (userDTO.getUserPw() != null) {
-            user.setUserPw(userDTO.getUserPw());
+            user.setUserPw(passwordEncoder.encode(userDTO.getUserPw()));
         }
         if (userDTO.getUserName() != null) {
             user.setUserName(userDTO.getUserName());

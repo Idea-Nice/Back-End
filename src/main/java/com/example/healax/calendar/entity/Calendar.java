@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "calendar")
 public class Calendar {
 
     @Id

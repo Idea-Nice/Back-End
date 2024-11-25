@@ -26,4 +26,7 @@ public class User {
 
     @Column(nullable = false, length = 30)
     private String userName;
+
+    @Column(nullable = false, length = 30)
+    private String roles;
 }
