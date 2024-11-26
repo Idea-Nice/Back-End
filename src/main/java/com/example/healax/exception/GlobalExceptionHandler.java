@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ErrorResponse> handleIOException(IOException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("파일 처리 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+                .body(new ErrorResponse("파일 또는 외부 API 처리 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 
     @ExceptionHandler(Exception.class)

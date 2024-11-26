@@ -2,13 +2,16 @@ package com.example.healax.user.domain;
 
 import com.example.healax.asmr.domain.Asmr;
 import com.example.healax.background.domain.Background;
+import com.example.healax.playlist.domain.Playlist;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -53,6 +56,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "asmr_id", foreignKey = @ForeignKey(name = "fk_asmr_user"))
     )
     private Set<Asmr> ownedAsmr = new HashSet<>();
+
+    // 유저 개인 재생 목록 관리용 컬럼
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    private List<Playlist> playlist = new ArrayList<>();
 
     // background 요소 추가할 때 호출할 메서드 (set이므로 add()가 필요함)
     public void addOwnedBackground(Background background) {
