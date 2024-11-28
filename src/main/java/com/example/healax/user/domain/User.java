@@ -38,27 +38,32 @@ public class User {
     @Column(nullable = false, length = 30)
     private String roles;
 
+    // 현재 설정된 배경화면
     @ManyToOne
-    @JoinColumn(name = "current_background_id", foreignKey = @ForeignKey(name = "fk_user_background_user"))
+    @JoinColumn(
+            name = "current_background_id",
+            foreignKey = @ForeignKey(name = "fk_user_background_current")
+    )
     private Background currentBackground;
 
     // 회원이 보유한 Background
     @ManyToMany
     @JoinTable(
             name = "user_background",
-            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_background_user")),
-            inverseJoinColumns = @JoinColumn(name = "background_id", foreignKey = @ForeignKey(name = "fk_user_background_user"))
+            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_background_owned_user")),
+            inverseJoinColumns = @JoinColumn(name = "background_id", foreignKey = @ForeignKey(name = "fk_user_background_owned_background"))
     )
-    private Set<Background> ownedBackgrounds = new HashSet<>(); // 중복 생성이 방지되도록 List 대신 Set으로 담는다.
+    private Set<Background> ownedBackgrounds = new HashSet<>();
 
-    //회원이 보유한 Asmr
+    // 회원이 보유한 Asmr
     @ManyToMany
     @JoinTable(
             name = "user_asmr",
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_asmr_user")),
-            inverseJoinColumns = @JoinColumn(name = "asmr_id", foreignKey = @ForeignKey(name = "fk_asmr_user"))
+            inverseJoinColumns = @JoinColumn(name = "asmr_id", foreignKey = @ForeignKey(name = "fk_user_asmr_asmr"))
     )
     private Set<Asmr> ownedAsmr = new HashSet<>();
+
 
     // 유저 개인 재생 목록 관리용 컬럼
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

@@ -10,7 +10,6 @@ import com.example.healax.storage.GcsAsmrService;
 import com.example.healax.user.domain.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

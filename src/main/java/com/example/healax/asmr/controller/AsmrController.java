@@ -1,6 +1,5 @@
 package com.example.healax.asmr.controller;
 
-import com.example.healax.asmr.domain.Asmr;
 import com.example.healax.asmr.dto.AsmrDTO;
 import com.example.healax.asmr.dto.PurcahseRequestDTO;
 import com.example.healax.asmr.service.AsmrService;
@@ -12,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/asmr")

@@ -6,7 +6,7 @@ import com.example.healax.calendar.entity.Calendar;
 import com.example.healax.calendar.repository.CalendarRepository;
 import com.example.healax.exception.CalendarNotFoundException;
 import com.example.healax.exception.UserNotFoundException;
-import com.example.healax.user.entity.User;
+import com.example.healax.user.domain.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

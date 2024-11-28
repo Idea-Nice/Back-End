@@ -2,7 +2,7 @@ package com.example.healax.security.service;
 
 import com.example.healax.security.dto.UserContext;
 import com.example.healax.user.dto.UserDTO;
-import com.example.healax.user.entity.User;
+import com.example.healax.user.domain.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
