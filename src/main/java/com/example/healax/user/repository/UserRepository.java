@@ -3,7 +3,6 @@ package com.example.healax.user.repository;
 import com.example.healax.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 

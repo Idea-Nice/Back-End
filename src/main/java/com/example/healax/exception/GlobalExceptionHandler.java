@@ -36,4 +36,3 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse("서버에서 예상치 못한 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 }
-

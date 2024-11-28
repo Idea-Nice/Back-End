@@ -35,6 +35,9 @@ public class User {
     @Column(nullable = false, length = 30, unique = true)
     private String userName;
 
+    @Column(nullable = false, length = 30)
+    private String roles;
+
     @ManyToOne
     @JoinColumn(name = "current_background_id", foreignKey = @ForeignKey(name = "fk_user_background_user"))
     private Background currentBackground;

@@ -1,21 +1,16 @@
 package com.example.healax.storage;
 
-import com.example.healax.asmr.domain.Asmr;
 import com.example.healax.asmr.repository.AsmrRepository;
-import com.example.healax.exception.CustomException;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,7 +31,7 @@ public class GcsAsmrService implements StorageService {
 
     // Asmr 파일 업로드 - audio/image 여부를 전달해 해당 디렉토리에 저장
     @Override
-    public String uploadFile(MultipartFile file, String subDirectory) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException {
         throw new UnsupportedOperationException("uploadFile 호출 시 디렉토리가 명시되어야 합니다.");
     }
 

@@ -7,8 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TodoStatusDTO {
-
     private Long id;
-
     private Boolean completed;
 }

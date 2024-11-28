@@ -2,8 +2,10 @@ package com.example.healax.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class UserNotFoundException extends CustomException {
-    public UserNotFoundException(String message) {
+public class CalendarNotFoundException extends CustomException{
+
+    public CalendarNotFoundException(String message) {
+
         super(message, HttpStatus.NOT_FOUND);
     }
 }

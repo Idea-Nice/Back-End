@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -39,15 +38,15 @@ public class UserController {
     // 회원 정보 수정
     @PutMapping()
     public ResponseEntity<String> update(@RequestBody UserDTO userDTO) {
-            userService.update(userDTO);
-            return ResponseEntity.status(HttpStatus.OK).body("회원 정보 수정 성공");
+        userService.update(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("회원 정보 수정 성공");
+
     }
 
     // 회원 삭제
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> delete(@PathVariable String userId) {
-            userService.delete(userId);
-            return ResponseEntity.status(HttpStatus.OK).body(userId + " 회원 탈퇴 완료");
+        userService.delete(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(userId + " 회원 탈퇴 완료");
     }
-
 }

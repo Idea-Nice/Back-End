@@ -56,25 +56,27 @@ public class TodoService {
     }
 
     /*
-     * 투두리스트 추가하기
-     * 투두 객체 생성후 타이틀 저장
-     * 유저 레포에 찾는 유저가 없으면 예외 발생 */
-    public void save(String userId, String todoTitle) {
 
-        Optional<User> user = userRepository.findByUserId(userId);
+=======
+    * 투두리스트 추가하기
+    * 투두 객체 생성후 타이틀 저장
+    * 유저 레포에 찾는 유저가 없으면 예외 발생 */
+    public void save(TodoListDTO todoListDTO) {
+
+        Optional<User> user = userRepository.findByUserId(todoListDTO.getUserId());
 
         if (user.isPresent()) {
 
             Todo todo = new Todo();
 
             todo.setUser(user.get());
-            todo.setTitle(todoTitle);
+            todo.setTitle(todoListDTO.getTitle());
 
             todoRepository.save(todo);
 
         } else {
 
-            throw new UserNotFoundException(userId + " 유저를 찾을 수 없습니다.");
+            throw new UserNotFoundException(todoListDTO.getUserId() + " 유저를 찾을 수 없습니다.");
         }
 
     }
@@ -103,24 +105,25 @@ public class TodoService {
     }
 
     /*
-     * 투두리스트 수정
-     * id로 검색후 존재하면 변경
-     * 없으면 예외처리*/
-    public void updateTodoList(Long id, String todoTitle) {
 
-        Optional<Todo> todoOptional = todoRepository.findById(id);
+    * 투두리스트 수정
+    * id로 검색후 존재하면 변경
+    * 없으면 예외처리*/
+    public void updateTodoList(TodoListDTO todoListDTO) {
+
+        Optional<Todo> todoOptional = todoRepository.findById(todoListDTO.getId());
 
         if (todoOptional.isPresent()) {
 
             Todo todo = todoOptional.get();
 
-            todo.setTitle(todoTitle);
+            todo.setTitle(todoListDTO.getTitle());
 
             todoRepository.save(todo);
 
         } else {
 
-            throw new TodoNotFoundException("해당 투두 " + id + " 아이디를 찾을 수 없습니다.");
+            throw new TodoNotFoundException("해당 투두 " + todoListDTO.getId() + " 아이디를 찾을 수 없습니다.");
         }
     }
 
