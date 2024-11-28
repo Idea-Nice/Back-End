@@ -40,11 +40,11 @@ public class BackgroundService {
 
 
     // 현재 배경화면 설정 변경하기
-    public Background setCurrentBackground(String userId, Long backgroundId) {
+    public Background setCurrentBackground(String userId, String backgroundName) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
 
-        Background background = backgroundRepository.findById(backgroundId)
+        Background background = backgroundRepository.findByName(backgroundName)
                 .orElseThrow(() -> new CustomException("해당 배경화면이 존재하지 않습니다.", HttpStatus.NOT_FOUND));
 
         // 현재 유저의 보유 배경화면 세트를 가져와 변경하려는 배경화면이 있는지 검사
@@ -67,10 +67,10 @@ public class BackgroundService {
     }
 
     // 배경화면 구매하기 (권한 해제)
-    public Background purchaseBackground(String userid, Long backgroundId) {
+    public Background purchaseBackground(String userid, String backgroundName) {
         User user = userRepository.findByUserId(userid)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
-        Background background = backgroundRepository.findById(backgroundId)
+        Background background = backgroundRepository.findByName(backgroundName)
                 .orElseThrow(() -> new CustomException("해당 배경화면이 존재하지 않습니다.", HttpStatus.NOT_FOUND));
 
         if(user.getOwnedBackgrounds().contains(background)) {
@@ -84,12 +84,25 @@ public class BackgroundService {
     }
 
     // 배경화면 업로드 : storage패키지에 구현해둔 파일을 저장하고 저장한 파일의 퍼블릭이미지url을 얻어오는 uploadFile() 호출
-    public Background saveBackground(MultipartFile file) throws IOException {
+    public Background saveBackground(String name, MultipartFile file) throws IOException {
         String imageUrl = gcsBackgroundService.uploadFile(file);
 
         Background background = new Background();
+        background.setName(name);
         background.setUrl(imageUrl);
 
         return backgroundRepository.save(background);
+    }
+
+    // 배경화면 기본 권한 추가 및 현재 배경화면 설정
+    public void addDefaultBackground(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+
+        Background defaultBackground = backgroundRepository.findByName("다락방")
+                .orElseThrow(() -> new CustomException("대상 기본 배경화면 <다락방>이 db에 추가되지 않았습니다.", HttpStatus.NOT_FOUND));
+
+        user.addOwnedBackground(defaultBackground);
+        user.setCurrentBackground(defaultBackground);
     }
 }

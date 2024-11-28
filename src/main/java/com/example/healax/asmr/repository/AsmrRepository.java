@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface AsmrRepository extends JpaRepository<Asmr, Long> {
-    Optional<Asmr> findByFileName(String fileName);
+    Optional<Asmr> findByName(String name);
 }

@@ -1,6 +1,5 @@
 package com.example.healax.background.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class BackgroundDTO {
-    private Long id;
-    private String name;
-    private String url;
+public class BackgroundRequestDTO {
+    private String userId;
+    private String backgroundName;
 }

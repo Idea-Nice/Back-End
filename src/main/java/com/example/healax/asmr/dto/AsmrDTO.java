@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class AsmrDTO {
     private Long id;
-    private String fileName;
-    private String url;
-    private String contentType;
+    private String name;
+    private String audioFileName;
+    private String audioUrl;
+    private String audioContentType;
+    private String imageFileName;
+    private String imageUrl;
+    private String imageContentType;
 }

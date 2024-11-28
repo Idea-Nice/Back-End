@@ -1,5 +1,7 @@
 package com.example.healax.user.service;
 
+import com.example.healax.asmr.service.AsmrService;
+import com.example.healax.background.service.BackgroundService;
 import com.example.healax.user.domain.User;
 import com.example.healax.user.dto.UserDTO;
 import com.example.healax.exception.UserNotFoundException;
@@ -14,17 +16,26 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    // UserRepository 의존성 주입
+    // 의존성 주입
     private final UserRepository userRepository;
+    private final BackgroundService backgroundService;
+    private final AsmrService asmrService;
 
     // 회원가입
     public void save(UserDTO userDTO) {
         User user = new User();
 
+        // 사용자 정보 설정
         user.setUserId(userDTO.getUserId());
         user.setUserPw(userDTO.getUserPw());
         user.setUserName(userDTO.getUserName());
 
+        // 기본 배경화면 추가 및 현재 배경화면으로 설정
+        backgroundService.addDefaultBackground(userDTO.getUserId());
+        // 기본 asmr 추가
+        asmrService.addDefaultAsmrs(userDTO.getUserId());
+
+        // 저장
         userRepository.save(user);
     }
 

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class BackgroundMapper {
     // Background -> BackgroundDTO
     public static BackgroundDTO toDTO(Background background) {
-        return new BackgroundDTO(background.getId(), background.getUrl());
+        return new BackgroundDTO(background.getId(), background.getName(), background.getUrl());
     }
 
     // List<Background> -> List<BackgroundDTO>

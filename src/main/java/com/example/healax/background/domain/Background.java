@@ -18,6 +18,10 @@ public class Background {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 배경화면 이름
+    @Column(nullable = false)
+    private String name;
+
     // 이미지 퍼블릭 url ( 브라우저에 바로 이미지를 볼 수 있는 url)
     private String url;
 

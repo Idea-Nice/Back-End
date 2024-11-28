@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,41 +28,42 @@ public class GcsAsmrService implements StorageService {
     @Value("${gcs.bucket.asmr}")
     private String bucketName;
 
-    // Asmr 파일 버킷에 업로드
+    @Value("${gcs.directory.asmr.audio}")
+    private String audioDirectory;
+
+    @Value("${gcs.directory.asmr.image}")
+    private String imageDirectory;
+
+    // Asmr 파일 업로드 - audio/image 여부를 전달해 해당 디렉토리에 저장
     @Override
-    public String uploadFile(MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
-
-        if (fileName == null) {
-            throw new IOException("유효하지 않은 파일명입니다.");
-        }
-
-        // GCS 업로드
-        Bucket bucket = storage.get(bucketName);
-        Blob blob = bucket.create(fileName, file.getInputStream(), file.getContentType());
-        String mediaUrl = blob.getMediaLink();
-
-        System.out.println("File Uploaded: " + fileName + " URL: " + mediaUrl); // 디버깅용 로그
-
-        // DB 저장
-        Asmr asmr = new Asmr();
-        asmr.setFileName(fileName);
-        asmr.setUrl(mediaUrl);
-        asmr.setContentType(file.getContentType());
-        asmrRepository.save(asmr);
-
-        return fileName;
+    public String uploadFile(MultipartFile file, String subDirectory) throws IOException {
+        throw new UnsupportedOperationException("uploadFile 호출 시 디렉토리가 명시되어야 합니다.");
     }
 
-    // 파일 이름으로 url 꺼내오기
-    public String getAsmrUrl(String fileName) {
-        Optional<Asmr> asmrOptional = asmrRepository.findByFileName(fileName);
-        if (asmrOptional.isEmpty()) {
-            throw new CustomException("해당 이름의 음원파일을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+    // 음원 업로드일 경우
+    public String uploadAudio(MultipartFile file) throws IOException {
+        return uploadFileToDirectory(file, audioDirectory);
+    }
+
+    // 이미지 업로드일 경우
+    public String uploadImage(MultipartFile file) throws IOException {
+        return uploadFileToDirectory(file, imageDirectory);
+    }
+
+    // 내부적으로 디렉토리를 명시해서 파일 업로드
+    private String uploadFileToDirectory(MultipartFile file, String subDirectory) throws IOException {
+        String originalFileName = file.getOriginalFilename();
+
+        if(originalFileName == null) {
+            throw new IOException("유효하지 않은 파일입니다.");
         }
 
-        Asmr asmr = asmrOptional.get();
-        return asmr.getUrl();
+        String uniqueFileName = UUID.randomUUID() + "_" + originalFileName;
+        String filePath = subDirectory + "/" + uniqueFileName;
+
+        Bucket bucket = storage.get(bucketName);
+        Blob blob = bucket.create(filePath, file.getInputStream(), file.getContentType());
+        return blob.getMediaLink();
     }
 
 }

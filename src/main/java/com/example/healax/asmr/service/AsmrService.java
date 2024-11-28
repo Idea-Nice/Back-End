@@ -1,6 +1,8 @@
 package com.example.healax.asmr.service;
 
 import com.example.healax.asmr.domain.Asmr;
+import com.example.healax.asmr.dto.AsmrDTO;
+import com.example.healax.asmr.mapper.AsmrMapper;
 import com.example.healax.asmr.repository.AsmrRepository;
 import com.example.healax.exception.CustomException;
 import com.example.healax.exception.UserNotFoundException;
@@ -8,6 +10,7 @@ import com.example.healax.storage.GcsAsmrService;
 import com.example.healax.user.domain.User;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,24 +29,24 @@ public class AsmrService {
     private final GcsAsmrService gcsAsmrService;
 
     // 모든 asmr 가져오기
-    public List<Asmr> getAllAsmrs() {
-        return asmrRepository.findAll();
+    public List<AsmrDTO> getAllAsmrs() {
+        return AsmrMapper.toDTOList(asmrRepository.findAll());
     }
 
     // 해당 유저가 보유한 asmr 가져오기 (권한이 Set이라 asmr도 Set으로 보냄)
-    public Set<Asmr> getUserOwnedAsmrs(String userId) {
+    public Set<AsmrDTO> getUserOwnedAsmrs(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
 
-        return user.getOwnedAsmr();
+        return AsmrMapper.toDTOSet(user.getOwnedAsmr());
     }
 
     // asmr 결제하기 (권한 해제)
-    public Asmr purchaseAsmr(String userId, String asmrFileName) {
+    public AsmrDTO purchaseAsmr(String userId, String asmrName) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
 
-        Asmr asmr = asmrRepository.findByFileName(asmrFileName)
+        Asmr asmr = asmrRepository.findByName(asmrName)
                 .orElseThrow(() -> new CustomException("해당 asmr을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
 
         if (user.getOwnedAsmr().contains(asmr)) {
@@ -53,20 +56,42 @@ public class AsmrService {
         user.addOwnedAsmr(asmr);
         userRepository.save(user);
 
-        return asmr;
+        return AsmrMapper.toDTO(asmr);
     }
 
     // asmr 파일 GCS에 업로드
-    public Asmr saveAsmr(MultipartFile file) throws IOException {
-        String asmrFileName = gcsAsmrService.uploadFile(file);
+    public AsmrDTO saveAsmr(String name, MultipartFile audioFile, MultipartFile imageFile) throws IOException {
+        String audioUrl = gcsAsmrService.uploadAudio(audioFile);
+        String imageUrl = gcsAsmrService.uploadImage(imageFile);
 
-        Optional<Asmr> asmrOptional = asmrRepository.findByFileName(asmrFileName);
+        Asmr asmr = new Asmr();
+        asmr.setName(name);
+        asmr.setAudioFileName(audioFile.getOriginalFilename());
+        asmr.setAudioUrl(audioUrl);
+        asmr.setAudioContentType(audioFile.getContentType());
+        asmr.setImageFileName(imageFile.getOriginalFilename());
+        asmr.setImageUrl(imageUrl);
+        asmr.setImageContentType(imageFile.getContentType());
 
-        if (asmrOptional.isEmpty()) {
-            throw new CustomException("GCS, DB 저장 과정 중 문제가 발생하여 파일 이름을 찾을 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        return asmrOptional.get();
+        asmrRepository.save(asmr);
+        return AsmrMapper.toDTO(asmr);
     }
 
+    // 기본 asmr 권한 추가
+    public void addDefaultAsmrs(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+
+        Optional<Asmr> optionalDefaultAsmr1 = asmrRepository.findByName("빗소리");
+        Optional<Asmr> optionalDefaultAsmr2 = asmrRepository.findByName("바람소리");
+
+        if(optionalDefaultAsmr1.isPresent() && optionalDefaultAsmr2.isPresent()) {
+            user.addOwnedAsmr(optionalDefaultAsmr1.get());
+            user.addOwnedAsmr(optionalDefaultAsmr2.get());
+
+            userRepository.save(user);
+        } else {
+            throw new CustomException("기본 Asmr 데이터가 존재하지 않습니다.(빗소리, 바람소리)", HttpStatus.NOT_FOUND);
+        }
+    }
 }
