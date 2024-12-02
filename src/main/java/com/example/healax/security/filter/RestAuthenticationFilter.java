@@ -17,6 +17,7 @@ import org.springframework.security.web.context.RequestAttributeSecurityContextR
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
 

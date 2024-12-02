@@ -27,7 +27,7 @@ public class RestAuthenticationFailureHandler implements AuthenticationFailureHa
 
         if (exception instanceof BadCredentialsException) {
 
-            mapper.writeValue(response.getWriter(), "유요하지 않은 아이디 또는 비밀번호 입니다.");
+            mapper.writeValue(response.getWriter(), "유효하지 않은 아이디 또는 비밀번호 입니다.");
 
         } else if (exception instanceof UsernameNotFoundException) {
 
