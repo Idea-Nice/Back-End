@@ -8,6 +8,7 @@ import com.example.healax.exception.CustomException;
 import com.example.healax.exception.UserNotFoundException;
 import com.example.healax.storage.GcsAsmrService;
 import com.example.healax.user.domain.User;
+import com.example.healax.user.dto.UserDTO;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -77,9 +78,7 @@ public class AsmrService {
     }
 
     // 기본 asmr 권한 추가
-    public void addDefaultAsmrs(String userId) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+    public void addDefaultAsmrs(User user) {
 
         Optional<Asmr> optionalDefaultAsmr1 = asmrRepository.findByName("빗소리");
         Optional<Asmr> optionalDefaultAsmr2 = asmrRepository.findByName("바람소리");
@@ -87,10 +86,8 @@ public class AsmrService {
         if(optionalDefaultAsmr1.isPresent() && optionalDefaultAsmr2.isPresent()) {
             user.addOwnedAsmr(optionalDefaultAsmr1.get());
             user.addOwnedAsmr(optionalDefaultAsmr2.get());
-
-            userRepository.save(user);
         } else {
-            throw new CustomException("기본 Asmr 데이터가 존재하지 않습니다.(빗소리, 바람소리)", HttpStatus.NOT_FOUND);
+            throw new CustomException("기본 Asmr 데이터가 존재하지 않습니다.(빗소리 또는 바람소리)", HttpStatus.NOT_FOUND);
         }
     }
 }

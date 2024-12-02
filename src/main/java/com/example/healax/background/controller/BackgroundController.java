@@ -17,6 +17,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/background")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000/")
 public class BackgroundController {
 
     private final BackgroundService backgroundService;

@@ -6,6 +6,7 @@ import com.example.healax.exception.CustomException;
 import com.example.healax.exception.UserNotFoundException;
 import com.example.healax.storage.GcsBackgroundService;
 import com.example.healax.user.domain.User;
+import com.example.healax.user.dto.UserDTO;
 import com.example.healax.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -95,14 +96,19 @@ public class BackgroundService {
     }
 
     // 배경화면 기본 권한 추가 및 현재 배경화면 설정
-    public void addDefaultBackground(String userId) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
+    public void addDefaultBackground(User user) {
 
         Background defaultBackground = backgroundRepository.findByName("다락방")
                 .orElseThrow(() -> new CustomException("대상 기본 배경화면 <다락방>이 db에 추가되지 않았습니다.", HttpStatus.NOT_FOUND));
 
         user.addOwnedBackground(defaultBackground);
-        user.setCurrentBackground(defaultBackground);
+    }
+
+    // 기본 배경화면 설정
+    public void setDefaultBackground(User user) {
+        Background defaultBackground = backgroundRepository.findByName("다락방")
+                .orElseThrow(() -> new CustomException("대상 기본 배경화면 <다락방>이 db에 추가되지 않았습니다.", HttpStatus.NOT_FOUND));
+
+        user.setDefaultCurrentBackground(defaultBackground);
     }
 }

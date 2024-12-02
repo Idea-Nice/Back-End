@@ -15,6 +15,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/asmr")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000/")
 public class AsmrController {
 
     private final AsmrService asmrService;

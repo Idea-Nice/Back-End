@@ -1,5 +1,6 @@
 package com.example.healax.user.controller;
 
+import com.example.healax.user.domain.User;
 import com.example.healax.user.dto.UserDTO;
 import com.example.healax.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,27 +13,24 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@CrossOrigin("http://localhost:3000/")
 public class UserController {
 
     // 의존성 주입
     private final UserService userService;
 
     // 회원 가입
-    @PostMapping("/signup")
+    @PostMapping("/Signup")
     public ResponseEntity<String> signup(@RequestBody UserDTO userDTO) {
-        userService.save(userDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(userDTO + "회원가입 성공");
+        User saveResult = userService.save(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(saveResult + "회원가입 성공");
     }
 
     // id 중복확인
     @PostMapping("/idCheck")
     public ResponseEntity<String> idCheck(@RequestParam String userId) {
         Optional<String> idCheck = userService.idCheck(userId);
-        if (idCheck.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(userId + "는 사용가능한 아이디 입니다.");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(idCheck.get() + "는 중복된 아이디입니다.");
-        }
+        return idCheck.map(s -> ResponseEntity.status(HttpStatus.CONFLICT).body(s + "는 중복된 아이디입니다.")).orElseGet(() -> ResponseEntity.status(HttpStatus.OK).body(userId + "는 사용가능한 아이디 입니다."));
     }
 
     // 회원 정보 수정

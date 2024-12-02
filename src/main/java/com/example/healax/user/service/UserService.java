@@ -36,10 +36,14 @@ public class UserService {
         user.setUserName(userDTO.getUserName());
         user.setRoles("ROLE_USER");
 
-        // 기본 배경화면 추가 및 현재 배경화면으로 설정
-        backgroundService.addDefaultBackground(userDTO.getUserId());
-        // 기본 asmr 추가
-        asmrService.addDefaultAsmrs(userDTO.getUserId());
+        // 기본 배경화면 권한 추가하기
+        backgroundService.addDefaultBackground(user);
+
+        // 기본 배경화면 설정하기
+        backgroundService.setDefaultBackground(user);
+
+        // 기본 asmr 추가하기
+        asmrService.addDefaultAsmrs(user);
 
         // 저장
         userRepository.save(user);

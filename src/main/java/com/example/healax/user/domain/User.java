@@ -26,10 +26,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, length = 100, unique = true)
     private String userId;
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, length = 100, unique = true)
     private String userPw;
 
     @Column(nullable = false, length = 30, unique = true)
@@ -80,4 +80,8 @@ public class User {
         ownedAsmr.add(asmr);
     }
 
+    // 기본 배경화면 설정할 때 호출할 메서드
+    public void setDefaultCurrentBackground(Background background) {
+        this.currentBackground = background;
+    }
 }
