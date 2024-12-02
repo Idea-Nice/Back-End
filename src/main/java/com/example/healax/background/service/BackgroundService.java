@@ -1,6 +1,7 @@
 package com.example.healax.background.service;
 
 import com.example.healax.background.domain.Background;
+import com.example.healax.background.dto.BackgroundDTO;
 import com.example.healax.background.repository.BackgroundRepository;
 import com.example.healax.exception.CustomException;
 import com.example.healax.exception.UserNotFoundException;
@@ -110,5 +111,23 @@ public class BackgroundService {
                 .orElseThrow(() -> new CustomException("대상 기본 배경화면 <다락방>이 db에 추가되지 않았습니다.", HttpStatus.NOT_FOUND));
 
         user.setDefaultCurrentBackground(defaultBackground);
+    }
+
+    // 기본 배경화면 DB에 저장하기
+    public BackgroundDTO saveReadyBackground() {
+
+        Background background = new Background();
+
+        background.setName("다락방");
+        background.setUrl("https://storage.googleapis.com/healax-background/background/993e6c41-7255-442e-be0e-95779e333881-다락방.jpg");
+
+        backgroundRepository.save(background);
+
+        BackgroundDTO backgroundDTO = new BackgroundDTO();
+
+        backgroundDTO.setName(background.getName());
+        backgroundDTO.setUrl(background.getUrl());
+
+        return backgroundDTO;
     }
 }

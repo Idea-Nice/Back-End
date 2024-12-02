@@ -68,4 +68,13 @@ public class BackgroundController {
         Background background = backgroundService.saveBackground(name, file);
         return ResponseEntity.ok(BackgroundMapper.toDTO(background));
     }
+
+    // 기본 배경화면 DB에 저장하기
+    @PostMapping("/ready")
+    public ResponseEntity<BackgroundDTO> readyBackground() {
+
+        BackgroundDTO backgroundDTO = backgroundService.saveReadyBackground();
+
+        return ResponseEntity.ok(backgroundDTO);
+    }
 }

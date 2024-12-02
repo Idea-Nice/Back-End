@@ -49,7 +49,7 @@ public class SecurityConfig {
                 // 모든 요청은 인증을 받아야한다.
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user/Signup","/user/idCheck**").permitAll()
-                        .requestMatchers("/background/upload", "/asmr/upload").permitAll()
+                        .requestMatchers("/background/upload","/background/ready","/asmr/upload", "/asmr/ready**").permitAll()
                         .anyRequest().authenticated()
                 )
                 // 필터 추가하기 UsernamePasswordAuthenticationFilter 이전 위치에 restAuthenticationFilter 위치 하도록 함

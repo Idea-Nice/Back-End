@@ -45,4 +45,21 @@ public class AsmrController {
         return ResponseEntity.ok(asmrService.saveAsmr(name, audioFile, imageFile));
     }
 
+    // asmr DB에 강제 저장
+    @PostMapping("/ready1")
+    public ResponseEntity<AsmrDTO> ready1Asmr() {
+
+        AsmrDTO asmrDTO = asmrService.saveReady1Asmr();
+
+        return ResponseEntity.ok(asmrDTO);
+    }
+
+    // asmr DB에 강제 저장
+    @PostMapping("/ready2")
+    public ResponseEntity<AsmrDTO> ready2Asmr() {
+
+        AsmrDTO asmrDTO = asmrService.saveReady2Asmr();
+
+        return ResponseEntity.ok(asmrDTO);
+    }
 }
