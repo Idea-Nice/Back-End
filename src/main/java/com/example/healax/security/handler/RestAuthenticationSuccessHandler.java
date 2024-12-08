@@ -1,10 +1,12 @@
 package com.example.healax.security.handler;
 
+import com.example.healax.jwt.JwtUtil;
 import com.example.healax.user.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -16,7 +18,10 @@ import java.io.IOException;
 /*
 * 인증 성공시 실행할 성공 핸들러 */
 @Component("restSuccessHandler")
+@RequiredArgsConstructor
 public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+    private final JwtUtil jwtUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -29,6 +34,8 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
         response.setContentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8");
 
         userDTO.setUserPw(null);
+
+        response.addHeader("Authorization", "Bearer " + jwtUtil.createTokenByLogin(userDTO));
 
         mapper.writeValue(response.getWriter(), userDTO);
 
