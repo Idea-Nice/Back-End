@@ -1,31 +1,30 @@
 package com.example.healax.playlist.service;
 
 import com.example.healax.exception.UserNotFoundException;
+import com.example.healax.openai.service.OpenAiService;
 import com.example.healax.playlist.domain.Playlist;
-import com.example.healax.playlist.dto.AddVideoRequest;
 import com.example.healax.playlist.dto.RemoveVideoRequest;
 import com.example.healax.user.domain.User;
 import com.example.healax.user.repository.UserRepository;
+import com.example.healax.youtube.dto.YoutubeDTO;
+import com.example.healax.youtube.service.YoutubeService;
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.Video;
-import com.google.api.services.youtube.model.VideoListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 public class PlaylistService {
 
     private final UserRepository userRepository;
-    private final YouTube youTube;
+    private final YoutubeService youtubeService;
+    private final OpenAiService openAiService;
 
     @Value("${youtube.api.key}")
     private String apiKey;
@@ -37,37 +36,50 @@ public class PlaylistService {
         return user.getPlaylist();
     }
 
-    // 재생목록에 영상 추가하기 - 입력으로 userId와 영상재생페이지의 Url을 받는다
-    public void addVideoToPlaylist(AddVideoRequest requestDTO) throws IOException {
-        User user = userRepository.findByUserId(requestDTO.getUserId())
+    // youtube url로 재생목록에 추가하기
+    @Transactional
+    public void addVideoByUrl(String userId, String videoUrl) {
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
 
-        // 영상 url에서 videoId 추출
-        String videoId = extractVideoId(requestDTO.getVideoUrl());
+        String videoId = youtubeService.extractVideoId(videoUrl);
+        YoutubeDTO video = youtubeService.searchTopVideos(videoId, 1).get(0);
 
-        // youtube data API 호출해 영상 정보 가져오기 전 세팅
-        YouTube.Videos.List videosList = youTube.videos().list("id,snippet");
-        videosList.setId(videoId);
-        videosList.setKey(apiKey);
-
-        // data api 정보 요청 실행
-        VideoListResponse videoListResponse = videosList.execute();
-        Video video = videoListResponse.getItems().get(0);
-
-        // 받아온 동영상 정보 Playlist 테이블에 저장
-        Playlist playlistVideo = new Playlist();
-        playlistVideo.setVideoId(videoId);
-        playlistVideo.setVideoUrl("https://www.youtube.com/watch?v=" + videoId);
-        playlistVideo.setTitle(video.getSnippet().getTitle());
-        playlistVideo.setThumbnailUrl(video.getSnippet().getThumbnails().getDefault().getUrl());
-        playlistVideo.setChannelTitle(video.getSnippet().getChannelTitle());
-
-        // 재생목록에 추가
-        user.getPlaylist().add(playlistVideo);
+        user.getPlaylist().add(video.toPlaylistEntity());
         userRepository.save(user);
+    }
 
+    // 키워드 또는 장르로 재생목록에 추가(저장)하기. 키워드가 될 지 장르가 될 지는 호출부에서 결정
+    @Transactional
+    public int addVideosByKeywordOrGenre(String userId, String keywordOrGenre, int maxResults) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
 
+        List<YoutubeDTO> videos = youtubeService.searchTopVideos(keywordOrGenre, maxResults);
+        int addedCount = 0; // 클라이언트 쪽에서 몇개가 추가되었는지 확인할 수 있도록 변수 추가
+        for(YoutubeDTO video : videos) {
+            boolean isDuplicate = user.getPlaylist().stream()
+                    .anyMatch(existingVideo -> existingVideo.getVideoId().equals(video.getVideoId()));
+            if(!isDuplicate) {
+                user.getPlaylist().add(video.toPlaylistEntity());
+                addedCount++;
+            }
+        }
+        userRepository.save(user);
+        return addedCount;
+    }
 
+    // ai를 통한 키워드 검색은 결과 3개
+    @Transactional
+    public int addVideosFromAi(String userId, String prompt) {
+        String keyword = openAiService.extractKeywords(prompt);
+        return addVideosByKeywordOrGenre(userId, keyword, 3);
+    }
+
+    // 장르 검색은 결과 10개
+    @Transactional
+    public int addVideosFromGenre(String userId, String genre) {
+        return addVideosByKeywordOrGenre(userId, genre, 10);
     }
 
     // 재생목록에서 영상 제거
@@ -80,22 +92,6 @@ public class PlaylistService {
             throw new NoSuchElementException("재생목록 내 해당 영상이 존재하지 않습니다.");
         }
         userRepository.save(user);
-    }
-
-
-    // 영상 재생 페이지 url에서 videoId 추출하기
-    private String extractVideoId(String videoUrl) {
-        String regex = "v=([a-zA-Z0-9_-]+)";    // url에서 v=!@#$ 뒷부분(비디오ID) 파라미터를 추출하는 정규식
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(videoUrl);
-
-        // 패턴을 감지하면 videoId로 여기고 해당 부분만 반환
-        if(matcher.find()) {
-            return matcher.group(1);    // v= 뒤 정규식 패턴이 나타나는 첫번째 부분을 videoId로 여긴다.
-        }
-
-        // 위 패턴을 찾지 못할 경우 요청 데이터 이상 보고
-        throw new IllegalArgumentException("잘못된 URL 형식의 요청입니다.");
     }
 
 }

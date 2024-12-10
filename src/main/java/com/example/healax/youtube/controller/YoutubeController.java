@@ -18,8 +18,8 @@ public class YoutubeController {
     private final YoutubeService youtubeService;
 
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<JsonNode>> searchTop20Videos(@PathVariable String keyword) throws IOException {
-        List<JsonNode> videos = youtubeService.searchTop20Videos(keyword);
+    public ResponseEntity<List<JsonNode>> searchTop10Videos(@PathVariable String keyword) throws IOException {
+        List<JsonNode> videos = youtubeService.searchTop10Videos(keyword);
         return ResponseEntity.ok(videos);
     }
 
