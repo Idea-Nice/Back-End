@@ -98,10 +98,10 @@ public class AsmrService {
 
         asmr.setName("빗소리");
         asmr.setAudioFileName("rain-sound-188158.mp3");
-        asmr.setAudioUrl("https://storage.googleapis.com/download/storage/v1/b/healax-asmr/o/asmr_audio%2Fce72bb83-7712-4733-b554-f42f2d24bfae_rain-sound-188158.mp3?generation=1733125411025266&alt=media");
+        asmr.setAudioUrl("https://storage.googleapis.com/healax-asmr/asmr_audio/0c5fae5a-6d49-467b-b04d-89f17c9beab1_rain-sound-188158.mp3");
         asmr.setAudioContentType("audio/mpeg");
         asmr.setImageFileName("비사진.jpg");
-        asmr.setImageUrl("https://storage.googleapis.com/download/storage/v1/b/healax-asmr/o/asmr_image%2F311bc426-badc-41df-a0e2-a9a96598ba2f_비사진.jpg?generation=1733125411118547&alt=media");
+        asmr.setImageUrl("https://storage.googleapis.com/healax-asmr/asmr_image/2ab8ba9b-a405-46bc-afc8-ce463473d020_rainpicture.jpg");
         asmr.setImageContentType("image/jpeg");
         asmrRepository.save(asmr);
 
@@ -114,10 +114,10 @@ public class AsmrService {
 
         asmr.setName("바람소리");
         asmr.setAudioFileName("windrauschen-142720.mp3");
-        asmr.setAudioUrl("https://storage.googleapis.com/download/storage/v1/b/healax-asmr/o/asmr_audio%2Ff6a5b583-fef4-4b4a-832c-97e342fa1494_windrauschen-142720.mp3?generation=1733125473348905&alt=media");
+        asmr.setAudioUrl("https://storage.googleapis.com/healax-asmr/asmr_audio/f6a5b583-fef4-4b4a-832c-97e342fa1494_windrauschen-142720.mp3");
         asmr.setAudioContentType("audio/mpeg");
         asmr.setImageFileName("바람사진.jpg");
-        asmr.setImageUrl("https://storage.googleapis.com/download/storage/v1/b/healax-asmr/o/asmr_image%2F420d4034-48ac-4fd4-9472-1c24ae53e575_바람사진.jpg?generation=1733125473415957&alt=media");
+        asmr.setImageUrl("https://storage.googleapis.com/healax-asmr/asmr_image/420d4034-48ac-4fd4-9472-1c24ae53e575_%EB%B0%94%EB%9E%8C%EC%82%AC%EC%A7%84.jpg");
         asmr.setImageContentType("image/jpeg");
         asmrRepository.save(asmr);
 
