@@ -20,4 +20,5 @@ public class UserDTO {
     private String userPw;
     private String userName;
     private String roles;
+    private String Authorization;
 }

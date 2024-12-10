@@ -15,7 +15,7 @@ public class RequestCalendarDTO {
 
     private String title;
 
-    private String content;
+//    private String content;
 
     private LocalDateTime startDay;
 

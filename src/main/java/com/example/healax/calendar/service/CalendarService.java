@@ -54,7 +54,7 @@ public class CalendarService {
 
             responseCalendarDTO.setId(calendar.getId());
             responseCalendarDTO.setTitle(calendar.getTitle());
-            responseCalendarDTO.setContent(calendar.getContent());
+//            responseCalendarDTO.setContent(calendar.getContent());
             responseCalendarDTO.setStartDay(calendar.getStartDay());
             responseCalendarDTO.setEndDay(calendar.getEndDay());
 
@@ -82,7 +82,7 @@ public class CalendarService {
 
         calendar.setUser(user.get());
         calendar.setTitle(calendarDTO.getTitle());
-        calendar.setContent(calendarDTO.getContent());
+//        calendar.setContent(calendarDTO.getContent());
         calendar.setStartDay(calendarDTO.getStartDay());
         calendar.setEndDay(calendarDTO.getEndDay());
 
@@ -105,7 +105,7 @@ public class CalendarService {
         Calendar calendar = calendarOptional.get();
 
         calendar.setTitle(calendarDTO.getTitle());
-        calendar.setContent(calendarDTO.getContent());
+//        calendar.setContent(calendarDTO.getContent());
         calendar.setStartDay(calendarDTO.getStartDay());
         calendar.setEndDay(calendarDTO.getEndDay());
 

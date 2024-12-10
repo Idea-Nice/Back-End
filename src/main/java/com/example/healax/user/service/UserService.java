@@ -26,7 +26,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입
-    public User save(UserDTO userDTO) {
+    public void save(UserDTO userDTO) {
 
         User user = new User();
 
@@ -48,7 +48,6 @@ public class UserService {
         // 저장
         userRepository.save(user);
 
-        return user;
     }
 
     /*
