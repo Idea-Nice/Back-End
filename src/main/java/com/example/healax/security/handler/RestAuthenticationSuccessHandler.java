@@ -35,7 +35,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
         userDTO.setUserPw(null);
 
-        userDTO.setAuthorization("Bearer " + jwtUtil.createTokenByLogin(userDTO));
+        userDTO.setAuthorization(jwtUtil.createTokenByLogin(userDTO));
 
         mapper.writeValue(response.getWriter(), userDTO);
 

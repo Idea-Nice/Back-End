@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -80,7 +80,7 @@ public class YoutubeService {
         YouTube.Search.List search = youTube.search().list("id,snippet");
         search.setQ(keyword);
         search.setType("video");
-        search.setMaxResults(10L);  // 상위 20개
+        search.setMaxResults(10L);  // 상위 10개
         search.setRegionCode("KR"); // 지역 코드 : 한국
         search.setOrder("relevance");   // 검색 기준 : 기본 ( 조회수 순 : viewCount, 최신순 : date, 평점 순 : rating )
         search.setKey(youtubeApiKey);
@@ -101,6 +101,39 @@ public class YoutubeService {
                             .put("channelTitle", snippet.get("channelTitle").asText());
                 })
                 .collect(Collectors.toList());
+    }
+
+    // 한 영상에 대한 정보 영상설명(description) 포함하여 가져오기
+    public JsonNode getVideoInfoById(String videoId) throws IOException {
+        try {
+            //Youtube API 요청 생성
+            YouTube.Videos.List videoRequest = youTube.videos().list("id,snippet");
+            videoRequest.setId(videoId);
+            videoRequest.setKey(youtubeApiKey);
+
+            // API 요청 실행 및 응답 처리
+            VideoListResponse response = videoRequest.execute();
+            List<Video> videos = response.getItems();
+
+            if(videos.isEmpty()) {
+                throw new CustomException("해당 videoId에 대한 영상 정보를 찾을 수 없습니다.: " + videoId, HttpStatus.NOT_FOUND);
+            }
+
+            Video video = videos.get(0);
+            JsonNode snippet = objectMapper.valueToTree(video.getSnippet());
+
+            // JsonNode 객체 생성 및 필요한 데이터 추가
+            return objectMapper.createObjectNode()
+                    .put("videoId", video.getId())
+                    .put("title", snippet.get("title").asText())
+                    .put("channelTitle", snippet.get("channelTitle").asText())
+                    .put("description", snippet.has("description") ? snippet.get("description").asText() : "");
+        } catch (IOException e) {
+            throw new CustomException("Youtube API 호출 중 네트워크 오류가 발생했습니다.", HttpStatus.SERVICE_UNAVAILABLE);
+        } catch (Exception e) {
+            throw new CustomException("Youtube API 호출 중 알 수 없는 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 }
