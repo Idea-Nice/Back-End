@@ -5,7 +5,9 @@ import com.example.healax.background.dto.BackgroundDTO;
 import com.example.healax.background.dto.BackgroundRequestDTO;
 import com.example.healax.background.mapper.BackgroundMapper;
 import com.example.healax.background.service.BackgroundService;
+import com.example.healax.exception.CommonResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,9 +42,13 @@ public class BackgroundController {
 
     // 배경화면 설정하기
     @PostMapping("/set-current")
-    public ResponseEntity<BackgroundDTO> setCurrentBackground(@RequestBody BackgroundRequestDTO request) {
-        BackgroundDTO backgroundDTO = BackgroundMapper.toDTO(backgroundService.setCurrentBackground(request.getUserId(), request.getBackgroundName()));
-        return ResponseEntity.ok(backgroundDTO);
+    public ResponseEntity<CommonResponse> setCurrentBackground(@RequestBody BackgroundRequestDTO request) {
+        Background background = backgroundService.setCurrentBackground(request.getUserId(), request.getBackgroundName());
+        CommonResponse response = new CommonResponse(
+                "현재 배경화면이 성공적으로 변경되었습니다. 설정된 배경화면 : " + background.getName(),
+                200
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 현재 적용된 배경화면 가져오기
@@ -56,10 +62,14 @@ public class BackgroundController {
 
     // 배경화면 결제하기 (권한 추가)
     @PostMapping("/purchase")
-    public ResponseEntity<BackgroundDTO> purchaseBackground(@RequestBody BackgroundRequestDTO request) {
-        return ResponseEntity.ok(
-                BackgroundMapper.toDTO(backgroundService.purchaseBackground(request.getUserId(), request.getBackgroundName()))
+    public ResponseEntity<CommonResponse> purchaseBackground(@RequestBody BackgroundRequestDTO request) {
+        Background background = backgroundService.purchaseBackground(request.getUserId(), request.getBackgroundName());
+
+        CommonResponse response = new CommonResponse(
+                "배경화면 권한을 성공적으로 획득했습니다. 획득한 배경화면 : " + background.getName(),
+                200
         );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 배경화면 업로드하기 (개발자 기능 - GCS, DB 저장)

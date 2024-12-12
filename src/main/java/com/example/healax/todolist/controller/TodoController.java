@@ -1,5 +1,6 @@
 package com.example.healax.todolist.controller;
 
+import com.example.healax.exception.CommonResponse;
 import com.example.healax.exception.TodoNotFoundException;
 import com.example.healax.exception.UserNotFoundException;
 import com.example.healax.todolist.dto.TodoIdListDTO;
@@ -7,6 +8,7 @@ import com.example.healax.todolist.dto.TodoListDTO;
 import com.example.healax.todolist.dto.TodoStatusDTO;
 import com.example.healax.todolist.service.TodoService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +35,15 @@ public class TodoController {
 
     // 투두리스트 추가
     @PostMapping()
-    public ResponseEntity<String> addTodoList(@RequestBody TodoListDTO todoListDTO) {
+    public ResponseEntity<CommonResponse> addTodoList(@RequestBody TodoListDTO todoListDTO) {
 
         todoService.save(todoListDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("투두리스트 추가 성공");
+        CommonResponse response = new CommonResponse(
+                "ToDo list에 정상적으로 해당 항목이 추가되었습니다.",
+                201
+        );
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // 해당 투두리스트 상태 변경
@@ -46,35 +52,45 @@ public class TodoController {
 
         todoService.updateTodoStatus(todoStatusDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body("투두 상태 변경 완료");
+        CommonResponse response = new CommonResponse(
+                "완료상태에 대한 수정이 정상적으로 완료되었습니다.",
+                200
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 투두리스트 수정
     @PutMapping()
-    public ResponseEntity<String> updateTodoList(@RequestBody TodoListDTO todoListDTO) {
-
+    public ResponseEntity<CommonResponse> updateTodoList(@RequestBody TodoListDTO todoListDTO) {
 
         todoService.updateTodoList(todoListDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body("투두리스트 " + todoListDTO.getId() + " 수정 성공");
+        CommonResponse response = new CommonResponse(
+                "투두리스트 수정이 정상적으로 완료되었습니다.",
+                200
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 
     // 투두리스트 하나 삭재
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTodo(@PathVariable Long id) {
-
+    public ResponseEntity<CommonResponse> deleteTodo(@PathVariable Long id) {
 
         todoService.delete(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body("투두리스트 " + id + " 삭제 완료");
+        CommonResponse response = new CommonResponse(
+                "투두리스트 1개가 정상적으로 삭제되었습니다.",
+                204
+        );
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
 
     }
 
 
     // 투두리스트 여러개 삭제
     @DeleteMapping("/del_list")
-    public ResponseEntity<String> deleteTodoList(@RequestBody List<TodoIdListDTO> id) {
+    public ResponseEntity<CommonResponse> deleteTodoList(@RequestBody List<TodoIdListDTO> id) {
 
         List<Long> ids = id.stream()
                     .map(TodoIdListDTO::getId)
@@ -82,6 +98,11 @@ public class TodoController {
 
         todoService.todoListDeletes(ids);
 
-        return ResponseEntity.status(HttpStatus.OK).body("투두리스트 " + ids + "를 삭제 했습니다.");
+        CommonResponse response = new CommonResponse(
+                "투두리스트 여러개가 정상적으로 삭제되었습니다.",
+                204
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 }

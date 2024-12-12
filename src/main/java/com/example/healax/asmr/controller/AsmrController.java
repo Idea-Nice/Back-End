@@ -3,7 +3,9 @@ package com.example.healax.asmr.controller;
 import com.example.healax.asmr.dto.AsmrDTO;
 import com.example.healax.asmr.dto.PurcahseRequestDTO;
 import com.example.healax.asmr.service.AsmrService;
+import com.example.healax.exception.CommonResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,15 +36,24 @@ public class AsmrController {
 
     // asmr 결제하기 (권한 추가) - 회원id, asmr 이름으로 조회
     @PostMapping("/purchase")
-    public ResponseEntity<AsmrDTO> purchaseAsmr(@RequestBody PurcahseRequestDTO request) {
-        AsmrDTO purchasedAsmr = asmrService.purchaseAsmr(request.getUserId(), request.getAsmrName());
-        return ResponseEntity.ok(purchasedAsmr);
+    public ResponseEntity<CommonResponse> purchaseAsmr(@RequestBody PurcahseRequestDTO request) {
+        asmrService.purchaseAsmr(request.getUserId(), request.getAsmrName());
+        CommonResponse response = new CommonResponse(
+                "정상적으로 ASMR 권한이 추가되었습니다.",
+                201
+        );
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // asmr 파일 업로드하기 (개발자기능 - GCS, DB 저장)
     @PostMapping("/upload")
-    public ResponseEntity<AsmrDTO> uploadAsmr(@RequestParam("name") String name, @RequestParam("audioFile") MultipartFile audioFile, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        return ResponseEntity.ok(asmrService.saveAsmr(name, audioFile, imageFile));
+    public ResponseEntity<CommonResponse> uploadAsmr(@RequestParam("name") String name, @RequestParam("audioFile") MultipartFile audioFile, @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+        asmrService.saveAsmr(name, audioFile, imageFile);
+        CommonResponse response = new CommonResponse(
+                "정상적으로 파일이 GCS와 DB에 업로드되었습니다.",
+                201
+        );
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     // asmr DB에 강제 저장
