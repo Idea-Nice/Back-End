@@ -34,15 +34,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        // 토큰이 블랙리스트에 있을 시
         if (jwtBlackListTokenService.isTokenBlackListed(accessToken)) {
 
-            response.sendError(403, "블랙리스트에 등록된 토큰입니다.");
+            response.setStatus(403);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"status\":403,\"message\":\"블랙리스트에 등록된 토큰입니다.\"}");
             return;
         }
 
+        // 토큰이 만료 되었을 시
         if (!jwtUtil.validToken(accessToken)) {
 
-            response.sendError(401, "토큰이 형식이 잘못되거나 만료 되었습니다.");
+            response.setStatus(401);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"status\":401,\"message\":\"토큰이 형식이 잘못되거나 만료되었습니다.\"}");
             return;
         }
 

@@ -33,6 +33,8 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8");
 
+        userDTO.setStatus(HttpStatus.OK.value());
+
         userDTO.setUserPw(null);
 
         userDTO.setAuthorization(jwtUtil.createTokenByLogin(userDTO));

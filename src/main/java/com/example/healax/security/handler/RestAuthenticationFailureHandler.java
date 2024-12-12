@@ -11,6 +11,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 * 인증 실패시 실행할 실패 핸들러 */
@@ -25,15 +27,24 @@ public class RestAuthenticationFailureHandler implements AuthenticationFailureHa
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE + ";charset=utf-8");
 
+        // 응답 데이터 생성
+        Map<String, Object> responseData = new HashMap<>();
+
         if (exception instanceof BadCredentialsException) {
 
-            mapper.writeValue(response.getWriter(), "유효하지 않은 아이디 또는 비밀번호 입니다.");
+            responseData.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+            responseData.put("message", "유효하지 않은 아이디 또는 비밀번호 입니다.");
 
         } else if (exception instanceof UsernameNotFoundException) {
 
-            mapper.writeValue(response.getWriter(), "유저를 찾을 수 없습니다.");
+            responseData.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+            responseData.put("message", "유저를 찾을 수 없습니다.");
+
+        } else {
+            responseData.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+            responseData.put("message", "인증 실패");
         }
 
-        mapper.writeValue(response.getWriter(), "인증 실패");
+        mapper.writeValue(response.getWriter(), responseData);
     }
 }

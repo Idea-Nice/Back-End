@@ -95,6 +95,7 @@ public class JwtUtil {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
+    //시간 추출
     public Date getTokenExpiration(String accessToken) {
         try {
             DecodedJWT jwt = JWT.require(Algorithm.HMAC256(JwtProperties.Secret)).build().verify(accessToken);

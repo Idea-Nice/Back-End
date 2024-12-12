@@ -4,10 +4,7 @@ import com.example.healax.jwt.JwtAuthenticationFilter;
 import com.example.healax.jwt.JwtUtil;
 import com.example.healax.jwt.service.JwtBlackListTokenService;
 import com.example.healax.security.filter.RestAuthenticationFilter;
-import com.example.healax.security.handler.CustomLogoutHandler;
-import com.example.healax.security.handler.CustomLogoutSuccessHandler;
-import com.example.healax.security.handler.RestAuthenticationFailureHandler;
-import com.example.healax.security.handler.RestAuthenticationSuccessHandler;
+import com.example.healax.security.handler.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -82,6 +79,12 @@ public class SecurityConfig {
                         .logoutSuccessHandler(customLogoutSuccessHandler)
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
+                )
+
+                // 접근 금지 핸들러 추가 및 앤트리 포인트 설정
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                        .accessDeniedHandler(new RestAccessDeniedHandler())
                 );
 
         return http.build();
