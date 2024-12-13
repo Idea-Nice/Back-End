@@ -38,3 +38,4 @@ out/
 
 ### 인증 파일 ###
 src/main/resources/healax-568543d8db15.json
+src/main/resources/application.properties
